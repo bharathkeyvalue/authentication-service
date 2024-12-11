@@ -23,6 +23,7 @@ import { RolePermissionRepository } from '../repository/rolePermission.repositor
 import { RoleServiceInterface } from './role.service.interface';
 import { RoleCacheServiceInterface } from './rolecache.service.interface';
 import SearchService from './search.service';
+import { ExecutionManager } from '../../util/execution.manager';
 
 @Injectable()
 export class RoleService implements RoleServiceInterface {
@@ -142,9 +143,10 @@ export class RoleService implements RoleServiceInterface {
       );
     }
 
+    const tenantId = ExecutionManager.getTenantId();
     const permissionsToBeRemovedFromRole: RolePermission[] = existingPermissionsOfRole
       .filter((p) => !validPermissionsInRequest.has(p.id))
-      .map((p) => ({ permissionId: p.id, roleId: id }));
+      .map((p) => ({ permissionId: p.id, roleId: id, tenantId }));
 
     const rolePermissions = this.rolePermissionRepository.create(
       request.permissions.map((permission) => ({

@@ -32,6 +32,7 @@ import { RoleCacheServiceInterface } from './rolecache.service.interface';
 import SearchService from './search.service';
 import { UserServiceInterface } from './user.service.interface';
 import { UserCacheServiceInterface } from './usercache.service.interface';
+import { ExecutionManager } from '../../util/execution.manager';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
@@ -147,9 +148,10 @@ export class UserService implements UserServiceInterface {
       );
     }
 
+    const tenantId = ExecutionManager.getTenantId();
     const groupsToBeRemovedFromUser: UserGroup[] = existingGroupsOfUser
       .filter((p) => !validGroupsInRequest.has(p.id))
-      .map((g) => ({ userId: id, groupId: g.id }));
+      .map((g) => ({ userId: id, groupId: g.id, tenantId }));
     const userGroups = this.userGroupRepository.create(
       user.groups.map((group) => ({ userId: id, groupId: group })),
     );
@@ -186,10 +188,10 @@ export class UserService implements UserServiceInterface {
         request.permissions.filter((p) => !validPermissions.has(p)).toString(),
       );
     }
-
+    const tenantId = ExecutionManager.getTenantId();
     const userPermissionsToBeRemoved: UserPermission[] = existingUserPermissions
       .filter((p) => !validPermissions.has(p.id))
-      .map((p) => ({ userId: id, permissionId: p.id }));
+      .map((p) => ({ userId: id, permissionId: p.id, tenantId }));
     this.userPermissionRepository.remove(userPermissionsToBeRemoved);
 
     const userPermissionsCreated = this.userPermissionRepository.create(

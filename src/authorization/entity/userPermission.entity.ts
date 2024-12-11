@@ -1,8 +1,8 @@
 import { Entity, PrimaryColumn } from 'typeorm';
-import BaseEntity from './base.entity';
+import AbstractTenantEntity from './abstract.tenant.entity';
 
 @Entity()
-class UserPermission extends BaseEntity {
+class UserPermission extends AbstractTenantEntity {
   @PrimaryColumn({ type: 'uuid' })
   public permissionId!: string;
 
