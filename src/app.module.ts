@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import * as Joi from '@hapi/joi';
 import { ConfigModule } from '@nestjs/config';
 
@@ -7,6 +7,7 @@ import { AppGraphQLModule } from './graphql/graphql.module';
 import { UserAuthModule } from './authentication/authentication.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HealthModule } from './health/health.module';
+import { ExecutionContextBinder } from './middleware/executionId.middleware';
 
 @Module({
   imports: [
@@ -30,4 +31,8 @@ import { HealthModule } from './health/health.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ExecutionContextBinder).forRoutes('*');
+  }
+}

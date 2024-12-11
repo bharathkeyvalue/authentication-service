@@ -1,8 +1,8 @@
-import { PrimaryColumn } from 'typeorm';
+import { Column } from 'typeorm';
 import BaseEntity from './base.entity';
 
 class AbstractTenantEntity extends BaseEntity {
-  @PrimaryColumn({ type: 'uuid' })
+  @Column({ type: 'uuid' })
   public tenantId!: string;
 }
 

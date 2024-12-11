@@ -1,3 +1,4 @@
+import { v4 as UUIDV4 } from 'uuid';
 import { AsyncLocalStorage } from 'async_hooks';
 
 export class ExecutionManager {
@@ -5,6 +6,16 @@ export class ExecutionManager {
 
   static init() {
     ExecutionManager.asl = new AsyncLocalStorage();
+  }
+
+  static runWithContext<R>(callback: (...args: any[]) => R): R {
+    return ExecutionManager.getExecutionContext().run(
+      new Map([
+        ['id', UUIDV4()],
+        ['startTime', new Date().toISOString()],
+      ]),
+      () => callback.apply(this),
+    );
   }
 
   private static getExecutionContext() {
