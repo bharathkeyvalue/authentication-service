@@ -77,5 +77,6 @@ const providers: Provider[] = [
   ],
   providers,
   controllers: [GoogleAuthController],
+  exports: [AuthenticationHelper],
 })
 export class UserAuthModule {}
