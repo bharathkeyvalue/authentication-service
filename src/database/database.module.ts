@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { ExecutionManager } from '../util/execution.manager';
 
 @Module({
   imports: [
@@ -22,6 +23,18 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
         namingStrategy: new SnakeNamingStrategy(),
         synchronize: false,
         logging: true,
+        extra: {
+          poolMiddleware: async (query: string, params: any[]) => {
+            const tenantId = ExecutionManager.getTenantId();
+            if (tenantId) {
+              return [
+                `SELECT set_config('app.tenant_id', ${tenantId}, false) ${query}`,
+                params,
+              ];
+            }
+            return [query, params];
+          },
+        },
       }),
     }),
   ],

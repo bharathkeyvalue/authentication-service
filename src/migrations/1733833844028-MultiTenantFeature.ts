@@ -71,9 +71,64 @@ export class MultiTenantFeature1733833844028 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "user_permission" ALTER COLUMN "tenant_id" DROP DEFAULT`,
     );
+    await queryRunner.query(`
+      ALTER TABLE "user" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "role" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "group" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "entity_model" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "user_group" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "user_permission" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "group_role" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "group_permission" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "role_permission" ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE "entity_permission" ENABLE ROW LEVEL SECURITY;
+ 
+      CREATE POLICY tenant_isolation_policy ON "user" 
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "role"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "group"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "entity_model"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "user_group"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "user_permission"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "group_role"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "group_permission"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "role_permission"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      CREATE POLICY tenant_isolation_policy ON "entity_permission"
+        USING (tenant_id = current_setting('app.tenant_id')::uuid);
+      `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
+      DROP POLICY tenant_isolation_policy ON "user";
+      DROP POLICY tenant_isolation_policy ON "role";
+      DROP POLICY tenant_isolation_policy ON "group";
+      DROP POLICY tenant_isolation_policy ON "entity_model";
+      DROP POLICY tenant_isolation_policy ON "user_group";
+      DROP POLICY tenant_isolation_policy ON "user_permission";
+      DROP POLICY tenant_isolation_policy ON "group_role";
+      DROP POLICY tenant_isolation_policy ON "group_permission";
+      DROP POLICY tenant_isolation_policy ON "role_permission";
+      DROP POLICY tenant_isolation_policy ON "entity_permission";
+      ALTER TABLE "user" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "role" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "group" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "entity_model" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "user_group" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "user_permission" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "group_role" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "group_permission" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "role_permission" DISABLE ROW LEVEL SECURITY;
+      ALTER TABLE "entity_permission" DISABLE ROW LEVEL SECURITY;
+    `);
     await queryRunner.query(
       `ALTER TABLE "user_permission" DROP COLUMN "tenant_id"`,
     );
