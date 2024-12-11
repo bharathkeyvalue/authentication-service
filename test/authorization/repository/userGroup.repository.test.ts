@@ -10,6 +10,7 @@ const userGroups: UserGroup[] = [
   {
     userId: VALID_USER_ID,
     groupId: VALID_GROUP_ID,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 

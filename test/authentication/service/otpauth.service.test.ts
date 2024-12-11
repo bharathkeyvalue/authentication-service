@@ -28,6 +28,7 @@ let users: User[] = [
     lastName: 'Test2',
     origin: 'simple',
     status: Status.ACTIVE,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -72,6 +73,7 @@ describe('test OTPAuthService', () => {
         refreshToken: token.refreshToken,
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
   });
@@ -88,6 +90,7 @@ describe('test OTPAuthService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
 
@@ -126,6 +129,7 @@ describe('test OTPAuthService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
     const input: UserOTPLoginInput = {
@@ -152,6 +156,7 @@ describe('test OTPAuthService', () => {
         lastName: users[0].lastName,
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: users[0].tenantId,
       },
     ];
     const userSignup: UserOTPSignupInput = {
@@ -179,6 +184,7 @@ describe('test OTPAuthService', () => {
       lastName: resp.lastName,
       origin: 'simple',
       status: Status.ACTIVE,
+      tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
     };
 
     const expectedUser = users[0];
@@ -195,6 +201,7 @@ describe('test OTPAuthService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
     const userSignup: UserOTPSignupInput = {

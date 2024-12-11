@@ -17,6 +17,7 @@ const users: User[] = [
     origin: 'simple',
     status: Status.ACTIVE,
     email: VALID_EMAIL,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 

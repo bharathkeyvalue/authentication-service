@@ -291,6 +291,7 @@ export interface InviteTokenResponse {
 export interface Entity {
     id: string;
     name: string;
+    tenantId: string;
     permissions?: Permission[];
 }
 
@@ -318,6 +319,7 @@ export interface IQuery {
 export interface Group {
     id: string;
     name: string;
+    tenantId: string;
     users?: User[];
     roles?: Role[];
     permissions?: Permission[];
@@ -327,6 +329,7 @@ export interface Group {
 export interface GroupRole {
     id: string;
     name: string;
+    tenantId: string;
 }
 
 export interface GroupPaginated extends Paginated {
@@ -343,6 +346,7 @@ export interface Permission {
 export interface Role {
     id: string;
     name: string;
+    tenantId: string;
     permissions?: Permission[];
 }
 
@@ -367,9 +371,11 @@ export interface User {
     groups?: Group[];
     permissions?: Permission[];
     inviteToken?: string;
+    tenantId: string;
 }
 
 export interface UserGroupResponse {
     id: string;
     name: string;
+    tenantId: string;
 }

@@ -10,6 +10,7 @@ const groupPermissions: GroupPermission[] = [
   {
     groupId: VALID_GROUP_ID,
     permissionId: VALID_PERMISSION_ID,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 

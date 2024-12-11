@@ -15,10 +15,12 @@ describe('test RolePermission repository', () => {
     {
       permissionId: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
       roleId: VALID_ROLE_ID,
+      tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
     },
     {
       permissionId: '09f7f119-c14b-4c37-ac1f-aae57d7bdbe5',
       roleId: VALID_ROLE_ID,
+      tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
     },
   ];
 

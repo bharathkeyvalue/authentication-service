@@ -8,6 +8,7 @@ const VALID_ENTITY_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 const entity: Entity = {
   id: VALID_ENTITY_ID,
   name: 'Test Entity 1',
+  tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
 };
 
 const updateResult: UpdateResult = {

@@ -20,6 +20,7 @@ type User {
   groups: [Group]
   permissions: [Permission]
   inviteToken: String
+  tenantId: String!
 }
 
 enum OperationType {
@@ -44,6 +45,7 @@ input UpdateUserGroupInput {
 type UserGroupResponse {
   id: ID!,
   name: String!
+  tenantId: String!
 }
 
 enum OperationType {
