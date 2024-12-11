@@ -47,6 +47,7 @@ describe('test TokenService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
     const token = authenticationHelper.generateTokenForUser(users[0]);
@@ -71,6 +72,7 @@ describe('test TokenService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
     const refreshInviteToken = authenticationHelper.generateInvitationToken(
@@ -103,6 +105,7 @@ describe('test TokenService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
     userService
@@ -125,6 +128,7 @@ describe('test TokenService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
     userService
@@ -144,6 +148,7 @@ describe('test TokenService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
     users[0].inviteToken = '';

@@ -31,6 +31,7 @@ const users: User[] = [
     lastName: 'Test2',
     origin: 'simple',
     status: GqlSchema.Status.ACTIVE,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -38,6 +39,7 @@ const roles: Role[] = [
   {
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -92,6 +94,7 @@ describe('Role Module', () => {
                   name: 'Customers',
                 },
               ],
+              tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
             },
           ],
         };
@@ -106,7 +109,7 @@ describe('Role Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getRoles { totalCount results { id name permissions { id name }}}}',
+              '{getRoles { totalCount results { id name permissions { id name} tenantId}}}',
           })
           .expect(200)
           .expect((res) => {
@@ -125,7 +128,7 @@ describe('Role Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name }}',
+              '{getRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -147,7 +150,8 @@ describe('Role Module', () => {
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
-            query: 'mutation { createRole(input: {name: "Test1"}) {id name }}',
+            query:
+              'mutation { createRole(input: {name: "Test1"}) {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -173,7 +177,7 @@ describe('Role Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { updateRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name }}',
+              'mutation { updateRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -192,7 +196,7 @@ describe('Role Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { deleteRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name }}',
+              'mutation { deleteRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -238,11 +242,13 @@ describe('Role Module', () => {
           lastName: 'Test2',
           origin: 'simple',
           status: GqlSchema.Status.ACTIVE,
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const roleInPayload: Role = {
         id: 'cf525c1d-e64d-462c-8cdc-e55eb9234b9e',
         name: 'Role1',
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       };
       const permissions: Permission[] = [
         {
@@ -259,6 +265,7 @@ describe('Role Module', () => {
           id: 'cf525c1d-e64d-462c-8cdc-e55eb9234b9e',
           name: 'Role1',
           permissions: permissions,
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const token = authenticationHelper.generateAccessToken(users[0]);
@@ -273,7 +280,7 @@ describe('Role Module', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           query:
-            '{getRole(id: "cf525c1d-e64d-462c-8cdc-e55eb9234b9e") {id name permissions{ id name }}}',
+            '{getRole(id: "cf525c1d-e64d-462c-8cdc-e55eb9234b9e") {id name permissions{ id name } tenantId}}',
         })
         .expect(200)
         .expect((res) => {
@@ -291,6 +298,7 @@ describe('Role Module', () => {
           lastName: 'Test2',
           origin: 'simple',
           status: GqlSchema.Status.ACTIVE,
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const permissions: Permission[] = [
@@ -310,6 +318,7 @@ describe('Role Module', () => {
             id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
             name: 'Customers',
             permissions: permissions,
+            tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
           },
         ],
       };
@@ -319,7 +328,7 @@ describe('Role Module', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           query:
-            '{getRoles { totalCount results { id name permissions{ id name }}}}',
+            '{getRoles { totalCount results { id name permissions{ id name } tenantId}}}',
         })
         .expect(200)
         .expect((res) => {

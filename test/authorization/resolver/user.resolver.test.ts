@@ -28,6 +28,7 @@ const users: User[] = [
     lastName: 'User',
     origin: 'simple',
     status: GqlSchema.Status.ACTIVE,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -57,6 +58,7 @@ const groups: Group[] = [
   {
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -138,6 +140,7 @@ describe('User Module', () => {
           lastName: users[0].lastName,
           origin: 'simple',
           status: GqlSchema.Status.ACTIVE,
+          tenantId: users[0].tenantId,
         };
 
         const finalResponse: GqlSchema.User = {
@@ -148,6 +151,7 @@ describe('User Module', () => {
           lastName: users[0].lastName,
           permissions: permissions,
           status: GqlSchema.Status.ACTIVE,
+          tenantId: users[0].tenantId,
         };
 
         const token = authenticationHelper.generateAccessToken(userInPayload);
@@ -165,7 +169,7 @@ describe('User Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getUser(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f9") { id email phone firstName lastName status permissions { id name } }}',
+              '{getUser(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f9") { id email phone firstName lastName status permissions { id name } tenantId}}',
           })
           .expect(200)
           .expect((res) => {

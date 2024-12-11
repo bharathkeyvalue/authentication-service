@@ -30,6 +30,7 @@ const users: User[] = [
     lastName: 'Test2',
     origin: 'simple',
     status: Status.ACTIVE,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -45,6 +46,7 @@ const allEntities: Entity[] = [
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
     permissions: permissions,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -52,6 +54,7 @@ const entities: Entity[] = [
   {
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -98,7 +101,9 @@ describe('Entity Module', () => {
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
-          .send({ query: '{getEntities {id name permissions { id name} }}' })
+          .send({
+            query: '{getEntities {id name permissions { id name} tenantId}}',
+          })
           .expect(200)
           .expect((res) => {
             expect(res.body.data.getEntities).toEqual(allEntities);
@@ -114,7 +119,7 @@ describe('Entity Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name }}',
+              '{getEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -135,7 +140,7 @@ describe('Entity Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { createEntity(input: {name: "Test1"}) {id name }}',
+              'mutation { createEntity(input: {name: "Test1"}) {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -159,7 +164,7 @@ describe('Entity Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { updateEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name }}',
+              'mutation { updateEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -176,7 +181,7 @@ describe('Entity Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { deleteEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name }}',
+              'mutation { deleteEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {

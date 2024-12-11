@@ -32,6 +32,7 @@ const users: User[] = [
     lastName: 'Test2',
     origin: 'simple',
     status: GqlSchema.Status.ACTIVE,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -39,6 +40,7 @@ const groups: Group[] = [
   {
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -91,6 +93,7 @@ describe('Group Module', () => {
           {
             id: 'f56bc83b-b163-4fa0-a685-c0fa0926614c',
             name: 'Test Group Role',
+            tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
           },
         ];
         const allPermissions: Permission[] = [
@@ -113,6 +116,7 @@ describe('Group Module', () => {
                 {
                   id: 'f56bc83b-b163-4fa0-a685-c0fa0926614c',
                   name: 'Test Group Role',
+                  tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
                 },
               ],
               permissions: [
@@ -131,6 +135,7 @@ describe('Group Module', () => {
                   name: 'Create-Roles',
                 },
               ],
+              tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
             },
           ],
         };
@@ -150,7 +155,7 @@ describe('Group Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getGroups { totalCount results { id name permissions{id name} roles{ id name } allPermissions{ id name }}}}',
+              '{getGroups { totalCount results { id name permissions{id name} roles{ id name tenantId} allPermissions{ id name } tenantId}}}',
           })
           .expect(200)
           .expect((res) => {
@@ -163,6 +168,7 @@ describe('Group Module', () => {
         const group: Group = {
           id: '4a3c33a9-983e-44c0-ad22-bdc5a84c2c75',
           name: 'Customers',
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         };
         const permissions: Permission[] = [
           {
@@ -174,6 +180,7 @@ describe('Group Module', () => {
           {
             id: '9942109f-026b-4f2f-a26f-5ceb5f911ba6',
             name: 'Test Group Role',
+            tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
           },
         ];
         const allPermissions: Permission[] = [
@@ -193,6 +200,7 @@ describe('Group Module', () => {
             {
               id: '9942109f-026b-4f2f-a26f-5ceb5f911ba6',
               name: 'Test Group Role',
+              tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
             },
           ],
           permissions: [
@@ -211,6 +219,7 @@ describe('Group Module', () => {
               name: 'Create-Roles',
             },
           ],
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         };
         groupService.getGroupById(group.id).returns(Promise.resolve(group));
         groupService
@@ -227,7 +236,7 @@ describe('Group Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getGroup(id: "4a3c33a9-983e-44c0-ad22-bdc5a84c2c75") {id name permissions{ id name } roles{ id name } allPermissions{ id name }}}',
+              '{getGroup(id: "4a3c33a9-983e-44c0-ad22-bdc5a84c2c75") {id name permissions{ id name } roles{ id name tenantId} allPermissions{ id name } tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -249,7 +258,8 @@ describe('Group Module', () => {
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
-            query: 'mutation { createGroup(input: {name: "Test1"}) {id name }}',
+            query:
+              'mutation { createGroup(input: {name: "Test1"}) {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -275,7 +285,7 @@ describe('Group Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { updateGroup(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name }}',
+              'mutation { updateGroup(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -294,7 +304,7 @@ describe('Group Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { deleteGroup(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name }}',
+              'mutation { deleteGroup(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
           })
           .expect(200)
           .expect((res) => {
@@ -341,18 +351,21 @@ describe('Group Module', () => {
           lastName: 'Test2',
           origin: 'simple',
           status: GqlSchema.Status.ACTIVE,
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const groupInPayload: Group[] = [
         {
           id: '836cccce-8ff6-40e9-9fc7-2dd5cba3f514',
           name: 'HR',
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const roles: Role[] = [
         {
           id: 'fcd858c6-26c5-462b-8c53-4b544830dca8',
           name: 'Customers',
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const groups: GqlSchema.Group[] = [
@@ -360,6 +373,7 @@ describe('Group Module', () => {
           id: '836cccce-8ff6-40e9-9fc7-2dd5cba3f514',
           name: 'HR',
           roles: roles,
+          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const token = authenticationHelper.generateAccessToken(users[0]);
@@ -375,7 +389,7 @@ describe('Group Module', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           query:
-            ' { getGroup(id: "836cccce-8ff6-40e9-9fc7-2dd5cba3f514") {id name roles{ id name }}}',
+            ' { getGroup(id: "836cccce-8ff6-40e9-9fc7-2dd5cba3f514") {id name tenantId roles{ id name tenantId }}}',
         })
         .expect(200)
         .expect((res) => {

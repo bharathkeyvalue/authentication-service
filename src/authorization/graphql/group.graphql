@@ -1,6 +1,7 @@
 type Group {
   id: ID!
   name: String!
+  tenantId: String!
   users: [User]
   roles: [Role]
   permissions: [Permission]
@@ -27,6 +28,7 @@ input UpdateGroupRoleInput {
 type GroupRole {
   id: ID!,
   name: String!
+  tenantId: String!
 }
 
 input GroupInputFilter {

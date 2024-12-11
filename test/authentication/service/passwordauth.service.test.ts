@@ -19,6 +19,7 @@ let users: User[] = [
     lastName: 'Test2',
     origin: 'simple',
     status: Status.ACTIVE,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -74,6 +75,7 @@ describe('test PasswordAuthService', () => {
         refreshToken: token.refreshToken,
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       },
     ];
   });

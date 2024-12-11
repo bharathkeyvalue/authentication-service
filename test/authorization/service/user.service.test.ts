@@ -34,6 +34,7 @@ const users: User[] = [
     lastName: 'Test2',
     origin: 'simple',
     status: Status.ACTIVE,
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -49,6 +50,7 @@ const groups: Group[] = [
   {
     id: '39d338b9-02bd-4971-a24e-b39a3f475580',
     name: 'Customers',
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -213,6 +215,7 @@ describe('test UserService', () => {
         lastName: 'Test2',
         origin: 'simple',
         status: Status.ACTIVE,
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       };
 
       saveMock.mockResolvedValue(users[0]);

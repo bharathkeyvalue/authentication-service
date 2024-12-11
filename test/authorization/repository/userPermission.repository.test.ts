@@ -9,6 +9,7 @@ const userPermissions: UserPermission[] = [
   {
     permissionId: VALID_PERMISSION_ID,
     userId: 'ccecef4f-58d3-477b-87ee-847ee22efe4d',
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 

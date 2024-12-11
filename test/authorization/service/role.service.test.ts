@@ -31,6 +31,7 @@ const roles: Role[] = [
   {
     id: VALID_ROLE_ID,
     name: 'Test1',
+    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 const permissions: Permission[] = [
@@ -199,6 +200,7 @@ describe('test Role Service', () => {
       expect(result).toEqual({
         id: VALID_ROLE_ID,
         name: 'Test1',
+        tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
       });
     });
   });

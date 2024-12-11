@@ -11,6 +11,7 @@ const VALID_GROUP_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 const group: Group = {
   id: VALID_GROUP_ID,
   name: 'Test Group 1',
+  tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
 };
 
 const updateResult: UpdateResult = {
