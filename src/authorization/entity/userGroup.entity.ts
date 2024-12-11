@@ -1,7 +1,8 @@
 import { Entity, PrimaryColumn } from 'typeorm';
-import BaseEntity from './base.entity';
+import AbstractTenantEntity from './abstract.tenant.entity';
+
 @Entity()
-class UserGroup extends BaseEntity {
+class UserGroup extends AbstractTenantEntity {
   @PrimaryColumn({ type: 'uuid' })
   public groupId!: string;
 

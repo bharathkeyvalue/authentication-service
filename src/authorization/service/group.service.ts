@@ -41,6 +41,7 @@ import SearchService from './search.service';
 import { UserCacheServiceInterface } from './usercache.service.interface';
 import { DUPLICATE_ERROR_CODE } from '../../constants/db.error.constants';
 import { LoggerService } from '../../logger/logger.service';
+import { ExecutionManager } from '../../util/execution.manager';
 
 @Injectable()
 export class GroupService implements GroupServiceInterface {
@@ -209,9 +210,10 @@ export class GroupService implements GroupServiceInterface {
       );
     }
 
+    const tenantId = ExecutionManager.getTenantId();
     const permissionsToBeRemovedFromGroup: GroupPermission[] = existingPermissionsOfGroup
       .filter((p) => !validPermissionsInRequest.has(p.id))
-      .map((p) => ({ permissionId: p.id, groupId: id }));
+      .map((p) => ({ permissionId: p.id, groupId: id, tenantId }));
 
     const groupPermission = this.groupPermissionRepository.create(
       request.permissions.map((permission) => ({
@@ -241,9 +243,10 @@ export class GroupService implements GroupServiceInterface {
     const validUsersInRequest = await this.validateUsers(userIds);
     const existingUsersOfGroup = await this.getGroupUsers(id);
 
+    const tenantId = ExecutionManager.getTenantId();
     const usersToBeRemovedFromGroup: UserGroup[] = existingUsersOfGroup
       .filter((user) => !validUsersInRequest.has(user.id))
-      .map((user) => ({ userId: user.id, groupId: id }));
+      .map((user) => ({ userId: user.id, groupId: id, tenantId }));
     const userGroups = this.userGroupRepository.create(
       userIds.map((userId) => ({ userId: userId, groupId: id })),
     );
@@ -306,9 +309,10 @@ export class GroupService implements GroupServiceInterface {
       );
     }
 
+    const tenantId = ExecutionManager.getTenantId();
     const rolesToBeRemovedFromGroup: GroupRole[] = existingRolesOfGroup
       .filter((p) => !validRolesInRequest.has(p.id))
-      .map((r) => ({ groupId: id, roleId: r.id }));
+      .map((r) => ({ groupId: id, roleId: r.id, tenantId }));
 
     const groupRoles = this.groupRoleRepository.create(
       request.roles.map((role) => ({

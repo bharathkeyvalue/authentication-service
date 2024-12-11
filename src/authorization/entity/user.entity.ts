@@ -1,6 +1,6 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { Status } from '../../schema/graphql.schema';
-import BaseEntity from './base.entity';
+import AbstractTenantEntity from './abstract.tenant.entity';
 
 @Entity()
 @Index('user_phone_unique_idx', ['phone'], {
@@ -8,7 +8,7 @@ import BaseEntity from './base.entity';
   where: '"deleted_at" IS NULL',
 })
 @Index('user_email_unique_idx', { synchronize: false })
-class User extends BaseEntity {
+class User extends AbstractTenantEntity {
   @PrimaryGeneratedColumn('uuid')
   public id!: string;
 

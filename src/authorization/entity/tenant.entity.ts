@@ -1,9 +1,9 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import AbstractTenantEntity from './abstract.tenant.entity';
+import BaseEntity from './base.entity';
 
 @Entity()
-@Index('role_name_unique_idx', { synchronize: false })
-class Role extends AbstractTenantEntity {
+@Index('tenant_name_unique_idx', { synchronize: false })
+class Tenant extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   public id!: string;
 
@@ -11,4 +11,4 @@ class Role extends AbstractTenantEntity {
   public name!: string;
 }
 
-export default Role;
+export default Tenant;
