@@ -52,7 +52,7 @@ export class EntityResolver {
   async updateEntityPermissions(
     @Args('id', ParseUUIDPipe) id: string,
     @Args('input') entityInput: UpdateEntityPermissionInput,
-  ): Promise<Entity[]> {
+  ): Promise<Permission[]> {
     return this.entityService.updateEntityPermissions(id, entityInput);
   }
 

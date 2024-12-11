@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { CustomExceptionsFilter } from './exception/exception.filter';
 import { ConfigService } from '@nestjs/config';
 import { LoggerService } from './logger/logger.service';
+import { ExecutionManager } from './util/execution.manager';
 
 async function bootstrap() {
   const appOptions = { cors: true };
@@ -14,6 +15,8 @@ async function bootstrap() {
   app.setGlobalPrefix('auth/api');
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new CustomExceptionsFilter());
+
+  ExecutionManager.init();
 
   await app.listen(configService.get('PORT') || 4000);
 

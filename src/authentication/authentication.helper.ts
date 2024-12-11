@@ -13,10 +13,9 @@ export class AuthenticationHelper {
       this.configService.get('JWT_TOKEN_EXPTIME') * 1 || 60 * 60;
     const secret = this.configService.get('JWT_SECRET') as string;
     const username = userDetails.email || userDetails.phone;
-    const tenantId = userDetails.tenantId;
     const dataStoredInToken = {
       username: username,
-      tenantId,
+      tenantId: userDetails.tenantId,
       sub: userDetails.id,
       env: this.configService.get('ENV') || 'local',
     };

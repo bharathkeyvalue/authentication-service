@@ -25,6 +25,7 @@ import {
 } from '../exception/userauth.exception';
 import { Authenticatable } from '../interfaces/authenticatable';
 import { TokenService } from './token.service';
+import { ExecutionManager } from '../../util/execution.manager';
 
 @Injectable()
 export default class PasswordAuthService implements Authenticatable {
@@ -68,6 +69,7 @@ export default class PasswordAuthService implements Authenticatable {
   async inviteTokenSignup(
     userDetails: UserInviteTokenSignupInput,
   ): Promise<InviteTokenResponse> {
+    const tenantId = ExecutionManager.getTenantId();
     const verifyUser = await this.userService.verifyDuplicateUser(
       userDetails.email,
       userDetails.phone,
@@ -85,6 +87,7 @@ export default class PasswordAuthService implements Authenticatable {
     userFromInput.middleName = userDetails.middleName;
     userFromInput.lastName = userDetails.lastName;
     userFromInput.status = Status.INVITED;
+    userFromInput.tenantId = tenantId;
     let invitationToken: { token: any; tokenExpiryTime?: any };
     const transaction = await this.dataSource.manager.transaction(async () => {
       const savedUser = await this.userService.createUser(userFromInput);
@@ -104,6 +107,7 @@ export default class PasswordAuthService implements Authenticatable {
         lastName: user.lastName,
         inviteToken: user?.inviteToken,
         status: user.status,
+        tenantId: user.tenantId,
       };
       return {
         inviteToken: invitationToken.token,
