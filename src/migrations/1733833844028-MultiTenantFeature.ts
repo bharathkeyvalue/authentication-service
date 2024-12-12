@@ -104,9 +104,33 @@ export class MultiTenantFeature1733833844028 implements MigrationInterface {
       CREATE POLICY tenant_isolation_policy ON "entity_permission"
         USING (tenant_id = current_setting('app.tenant_id')::uuid);
       `);
+    await queryRunner.query(`
+      ALTER TABLE "entity_permission" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "group" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "group_permission" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "entity_model" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "role" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "group_role" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "role_permission" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "user" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "user_group" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+      ALTER TABLE "user_permission" ALTER COLUMN "tenant_id" SET DEFAULT current_setting('app.tenant_id')::uuid;
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
+      ALTER TABLE "user_permission" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "user_group" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "user" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "role_permission" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "group_role" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "role" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "entity_model" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "group_permission" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "group" ALTER COLUMN "tenant_id" DROP DEFAULT;
+      ALTER TABLE "entity_permission" ALTER COLUMN "tenant_id" DROP DEFAULT;
+    `);
     await queryRunner.query(`
       DROP POLICY tenant_isolation_policy ON "user";
       DROP POLICY tenant_isolation_policy ON "role";

@@ -15,6 +15,7 @@ import { EntityPermissionRepository } from '../repository/entityPermission.repos
 import { PermissionRepository } from '../repository/permission.repository';
 import { EntityServiceInterface } from './entity.service.interface';
 import { ExecutionManager } from '../../util/execution.manager';
+import { getConnection } from '../../util/database.connection';
 
 @Injectable()
 export class EntityService implements EntityServiceInterface {
@@ -61,8 +62,8 @@ export class EntityService implements EntityServiceInterface {
     if (!existingEntity) {
       throw new EntityNotFoundException(id);
     }
-
-    await this.dataSource.manager.transaction(async (entityManager) => {
+    const entityManager = (await getConnection()).manager;
+    await entityManager.transaction(async (entityManager) => {
       const entityRepo = entityManager.getRepository(EntityModel);
       const entityPermissionRepo = entityManager.getRepository(
         EntityPermission,

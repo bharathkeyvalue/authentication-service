@@ -16,7 +16,7 @@ export class ExecutionContextBinder implements NestMiddleware {
         }
         next();
       } catch (error) {
-        next(error);
+        next();
       }
     });
   }
