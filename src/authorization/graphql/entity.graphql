@@ -1,7 +1,6 @@
 type Entity {
   id: ID!
   name: String!
-  tenantId: String!
   permissions: [Permission]
 }
 

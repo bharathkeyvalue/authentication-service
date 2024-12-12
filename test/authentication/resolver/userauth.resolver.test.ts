@@ -95,7 +95,6 @@ describe('Userauth Module', () => {
           firstName: users[0].firstName,
           lastName: users[0].lastName,
           status: users[0].status,
-          tenantId: users[0].tenantId,
         };
         const tokenResponse = {
           accessToken: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
@@ -116,7 +115,7 @@ describe('Userauth Module', () => {
           .post(gql)
           .send({
             query:
-              'mutation { passwordLogin(input: { username: "user@test.com" password: "s3cr3t1234567890" }) { accessToken, refreshToken, user{ id, email, phone, firstName, lastName, status tenantId} }}',
+              'mutation { passwordLogin(input: { username: "user@test.com" password: "s3cr3t1234567890" }) { accessToken, refreshToken, user{ id, email, phone, firstName, lastName, status}}}',
           })
           .expect(200)
           .expect((res) => {
@@ -186,7 +185,6 @@ describe('Userauth Module', () => {
           inviteToken:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inh5ekBrZXl2YWx1ZS5zeXN0ZW1zIiwiaWF0IjoxNjIxNTI1NTE1LCJleHAiOjE2MjE1MjkxMTV9.t8z7rBZKkog-1jirScYU6HE7KVTzatKWjZw8lVz3xLo',
           status: Status.INVITED,
-          tenantId: users[0].tenantId,
         },
       };
       configService.get('JWT_SECRET').returns('s3cr3t1234567890');
@@ -202,7 +200,7 @@ describe('Userauth Module', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           query: `mutation { inviteTokenSignup(input: { email: "test@gmail.com"
-          phone: "9947849200" firstName: "Test" lastName: "Name" }) { inviteToken tokenExpiryTime user{id firstName lastName inviteToken status tenantId}}}`,
+          phone: "9947849200" firstName: "Test" lastName: "Name" }) { inviteToken tokenExpiryTime user{id firstName lastName inviteToken status}}}`,
         })
         .expect(200)
         .expect((res) => {
@@ -286,7 +284,6 @@ describe('Userauth Module', () => {
           inviteToken:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inh5ekBrZXl2YWx1ZS5zeXN0ZW1zIiwiaWF0IjoxNjIxNTI1NTE1LCJleHAiOjE2MjE1MjkxMTV9.t8z7rBZKkog-1jirScYU6HE7KVTzatKWjZw8lVz3xLo',
           status: Status.INVITED,
-          tenantId: users[0].tenantId,
         },
       };
       tokenService
@@ -307,7 +304,6 @@ describe('Userauth Module', () => {
                 lastName
                 inviteToken
                 status
-                tenantId
               }
             }
           }`,
@@ -345,7 +341,6 @@ describe('Userauth Module', () => {
         firstName: users[0].firstName,
         lastName: users[0].lastName,
         status: users[0].status,
-        tenantId: users[0].tenantId,
       };
       const tokenResponse: TokenResponse = { ...token, user: user };
       tokenService
@@ -355,7 +350,7 @@ describe('Userauth Module', () => {
       return request(app.getHttpServer())
         .post(gql)
         .send({
-          query: `mutation { refresh(input: { refreshToken: "${token.refreshToken}"}) { accessToken refreshToken user { id, email, phone, firstName, lastName, status tenantId} }}`,
+          query: `mutation { refresh(input: { refreshToken: "${token.refreshToken}"}) { accessToken refreshToken user { id, email, phone, firstName, lastName, status}}}`,
         })
         .expect(200)
         .expect((res) => {

@@ -35,11 +35,10 @@ const users: User[] = [
   },
 ];
 
-const roles: Role[] = [
+const roles = [
   {
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
-    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -94,13 +93,14 @@ describe('Role Module', () => {
                   name: 'Customers',
                 },
               ],
-              tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
             },
           ],
         };
         const token = authenticationHelper.generateAccessToken(users[0]);
 
-        roleService.getAllRoles().returns(Promise.resolve([roles, 1]));
+        roleService
+          .getAllRoles()
+          .returns(Promise.resolve([roles as Role[], 1]));
         roleService
           .getRolePermissions(roles[0].id)
           .returns(Promise.resolve(permissions));
@@ -109,7 +109,7 @@ describe('Role Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getRoles { totalCount results { id name permissions { id name} tenantId}}}',
+              '{getRoles { totalCount results { id name permissions { id name}}}}',
           })
           .expect(200)
           .expect((res) => {
@@ -122,13 +122,13 @@ describe('Role Module', () => {
 
         roleService
           .getRoleById('ae032b1b-cc3c-4e44-9197-276ca877a7f8')
-          .returns(Promise.resolve(roles[0]));
+          .returns(Promise.resolve(roles[0] as Role));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
+              '{getRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name}}',
           })
           .expect(200)
           .expect((res) => {
@@ -145,13 +145,12 @@ describe('Role Module', () => {
 
         roleService
           .createRole(Object.assign(obj, input))
-          .returns(Promise.resolve(roles[0]));
+          .returns(Promise.resolve(roles[0] as Role));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
-            query:
-              'mutation { createRole(input: {name: "Test1"}) {id name tenantId}}',
+            query: 'mutation { createRole(input: {name: "Test1"}) {id name}}',
           })
           .expect(200)
           .expect((res) => {
@@ -171,13 +170,13 @@ describe('Role Module', () => {
             'ae032b1b-cc3c-4e44-9197-276ca877a7f8',
             Object.assign(obj, input),
           )
-          .returns(Promise.resolve(roles[0]));
+          .returns(Promise.resolve(roles[0] as Role));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { updateRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name tenantId}}',
+              'mutation { updateRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name}}',
           })
           .expect(200)
           .expect((res) => {
@@ -190,13 +189,13 @@ describe('Role Module', () => {
 
         roleService
           .deleteRole('ae032b1b-cc3c-4e44-9197-276ca877a7f8')
-          .returns(Promise.resolve(roles[0]));
+          .returns(Promise.resolve(roles[0] as Role));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { deleteRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
+              'mutation { deleteRole(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name}}',
           })
           .expect(200)
           .expect((res) => {
@@ -265,7 +264,6 @@ describe('Role Module', () => {
           id: 'cf525c1d-e64d-462c-8cdc-e55eb9234b9e',
           name: 'Role1',
           permissions: permissions,
-          tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
         },
       ];
       const token = authenticationHelper.generateAccessToken(users[0]);
@@ -280,7 +278,7 @@ describe('Role Module', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           query:
-            '{getRole(id: "cf525c1d-e64d-462c-8cdc-e55eb9234b9e") {id name permissions{ id name } tenantId}}',
+            '{getRole(id: "cf525c1d-e64d-462c-8cdc-e55eb9234b9e") {id name permissions{ id name }}}',
         })
         .expect(200)
         .expect((res) => {
@@ -318,7 +316,6 @@ describe('Role Module', () => {
             id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
             name: 'Customers',
             permissions: permissions,
-            tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
           },
         ],
       };
@@ -328,7 +325,7 @@ describe('Role Module', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           query:
-            '{getRoles { totalCount results { id name permissions{ id name } tenantId}}}',
+            '{getRoles { totalCount results { id name permissions{ id name }}}}',
         })
         .expect(200)
         .expect((res) => {

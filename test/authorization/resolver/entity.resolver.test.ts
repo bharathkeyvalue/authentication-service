@@ -17,6 +17,7 @@ import {
   UpdateEntityPermissionInput,
 } from '../../../src/schema/graphql.schema';
 import { mockedConfigService } from '../../utils/mocks/config.service';
+import EntityModel from '../../../src/authorization/entity/entity.entity';
 
 const gql = '/graphql';
 
@@ -46,7 +47,6 @@ const allEntities: Entity[] = [
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
     permissions: permissions,
-    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -54,7 +54,6 @@ const entities: Entity[] = [
   {
     id: '2b33268a-7ff5-4cac-a87a-6bfc4430d34c',
     name: 'Customers',
-    tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
   },
 ];
 
@@ -94,7 +93,9 @@ describe('Entity Module', () => {
   describe(gql, () => {
     describe('entities', () => {
       it('should get the entities', () => {
-        entityService.getAllEntities().returns(Promise.resolve(entities));
+        entityService
+          .getAllEntities()
+          .returns(Promise.resolve(entities as EntityModel[]));
         entityService
           .getEntityPermissions('2b33268a-7ff5-4cac-a87a-6bfc4430d34c')
           .returns(Promise.resolve(permissions));
@@ -102,7 +103,7 @@ describe('Entity Module', () => {
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
-            query: '{getEntities {id name permissions { id name} tenantId}}',
+            query: '{getEntities {id name permissions { id name}}}',
           })
           .expect(200)
           .expect((res) => {
@@ -113,13 +114,13 @@ describe('Entity Module', () => {
       it('should get single entity', () => {
         entityService
           .getEntityById('ae032b1b-cc3c-4e44-9197-276ca877a7f8')
-          .returns(Promise.resolve(entities[0]));
+          .returns(Promise.resolve(entities[0] as EntityModel));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
+              '{getEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name}}',
           })
           .expect(200)
           .expect((res) => {
@@ -134,13 +135,12 @@ describe('Entity Module', () => {
         const obj = Object.create(null);
         entityService
           .createEntity(Object.assign(obj, input))
-          .returns(Promise.resolve(entities[0]));
+          .returns(Promise.resolve(entities[0] as EntityModel));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
-            query:
-              'mutation { createEntity(input: {name: "Test1"}) {id name tenantId}}',
+            query: 'mutation { createEntity(input: {name: "Test1"}) {id name}}',
           })
           .expect(200)
           .expect((res) => {
@@ -158,13 +158,13 @@ describe('Entity Module', () => {
             'ae032b1b-cc3c-4e44-9197-276ca877a7f8',
             Object.assign(obj, input),
           )
-          .returns(Promise.resolve(entities[0]));
+          .returns(Promise.resolve(entities[0] as EntityModel));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { updateEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name tenantId}}',
+              'mutation { updateEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8", input: {name: "Test1"}) {id name}}',
           })
           .expect(200)
           .expect((res) => {
@@ -175,13 +175,13 @@ describe('Entity Module', () => {
       it('should delete a entity', () => {
         entityService
           .deleteEntity('ae032b1b-cc3c-4e44-9197-276ca877a7f8')
-          .returns(Promise.resolve(entities[0]));
+          .returns(Promise.resolve(entities[0] as EntityModel));
         return request(app.getHttpServer())
           .post(gql)
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              'mutation { deleteEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name tenantId}}',
+              'mutation { deleteEntity(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f8") {id name}}',
           })
           .expect(200)
           .expect((res) => {

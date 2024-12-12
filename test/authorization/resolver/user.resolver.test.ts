@@ -151,7 +151,6 @@ describe('User Module', () => {
           lastName: users[0].lastName,
           permissions: permissions,
           status: GqlSchema.Status.ACTIVE,
-          tenantId: users[0].tenantId,
         };
 
         const token = authenticationHelper.generateAccessToken(userInPayload);
@@ -169,7 +168,7 @@ describe('User Module', () => {
           .set('Authorization', `Bearer ${token}`)
           .send({
             query:
-              '{getUser(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f9") { id email phone firstName lastName status permissions { id name } tenantId}}',
+              '{getUser(id: "ae032b1b-cc3c-4e44-9197-276ca877a7f9") { id email phone firstName lastName status permissions { id name }}}',
           })
           .expect(200)
           .expect((res) => {
