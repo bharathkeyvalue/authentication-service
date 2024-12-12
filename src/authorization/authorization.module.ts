@@ -51,6 +51,11 @@ import { UserService } from './service/user.service';
 import { UserServiceInterface } from './service/user.service.interface';
 import { UserCacheService } from './service/usercache.service';
 import { UserCacheServiceInterface } from './service/usercache.service.interface';
+import Tenant from './entity/tenant.entity';
+import { TenantResolver } from './resolver/tenant.resolver';
+import TenantService from './service/tenant.service';
+import { TenantRepository } from './repository/tenant.repository';
+import { TenantServiceInterface } from './service/tenant.service.interface';
 
 @Module({
   imports: [
@@ -66,6 +71,7 @@ import { UserCacheServiceInterface } from './service/usercache.service.interface
       Role,
       GroupRole,
       RolePermission,
+      Tenant,
     ]),
     RedisCacheModule,
   ],
@@ -91,6 +97,8 @@ import { UserCacheServiceInterface } from './service/usercache.service.interface
     UserGroupRepository,
     EntityPermissionRepository,
     LoggerService,
+    TenantResolver,
+    TenantRepository,
     {
       provide: EntityServiceInterface,
       useClass: EntityService,
@@ -126,6 +134,10 @@ import { UserCacheServiceInterface } from './service/usercache.service.interface
     {
       provide: UserCacheServiceInterface,
       useClass: UserCacheService,
+    },
+    {
+      provide: TenantServiceInterface,
+      useClass: TenantService,
     },
   ],
   exports: [

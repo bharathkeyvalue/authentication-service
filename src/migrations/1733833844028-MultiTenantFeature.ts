@@ -5,10 +5,10 @@ export class MultiTenantFeature1733833844028 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "tenant" ("deleted_at" TIMESTAMP, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, CONSTRAINT "PK_da8c6efd67bb301e810e56ac139" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "tenant" ("deleted_at" TIMESTAMP, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "domain" character varying NOT NULL, CONSTRAINT "UQ_97b9c4dae58b30f5bd875f241ab" UNIQUE ("domain"), CONSTRAINT "PK_da8c6efd67bb301e810e56ac139" PRIMARY KEY ("id"))`,
     );
     const tenants = await queryRunner.query(
-      `INSERT INTO "tenant" ("name") VALUES ('Default Tenant') RETURNING id`,
+      `INSERT INTO "tenant" ("name", "domain") VALUES ('Default Tenant', 'default.domain') RETURNING id`,
     );
     const tenantId = tenants[0].id;
     await queryRunner.query(

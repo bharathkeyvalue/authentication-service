@@ -166,6 +166,11 @@ export interface RoleSearchCondition {
     name?: StringSearchCondition;
 }
 
+export interface NewTenantInput {
+    name: string;
+    domain: string;
+}
+
 export interface UpdateUserInput {
     firstName?: string;
     middleName?: string;
@@ -261,6 +266,7 @@ export interface IMutation {
     updateRole(id: string, input: UpdateRoleInput): Role | Promise<Role>;
     deleteRole(id: string): Role | Promise<Role>;
     updateRolePermissions(id: string, input: UpdateRolePermissionInput): Permission[] | Promise<Permission[]>;
+    createTenant(input: NewTenantInput): Tenant | Promise<Tenant>;
     updateUser(id: string, input: UpdateUserInput): User | Promise<User>;
     deleteUser(id: string): User | Promise<User>;
     updateUserPermissions(id: string, input: UpdateUserPermissionInput): Permission[] | Promise<Permission[]>;
@@ -353,6 +359,12 @@ export interface Role {
 export interface RolePaginated extends Paginated {
     totalCount?: number;
     results?: Role[];
+}
+
+export interface Tenant {
+    id: string;
+    name: string;
+    domain: string;
 }
 
 export interface UserPaginated extends Paginated {

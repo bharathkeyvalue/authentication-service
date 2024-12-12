@@ -1,0 +1,14 @@
+input NewTenantInput {
+  name: String!
+  domain: String!
+}
+
+type Tenant {
+  id: ID!
+  name: String!
+  domain: String!
+}
+
+type Mutation {
+  createTenant(input: NewTenantInput!): Tenant
+}
