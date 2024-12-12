@@ -103,7 +103,7 @@ describe('test Role Service', () => {
     roleRepository = moduleRef.get(RoleRepository);
     permissionRepository = moduleRef.get(PermissionRepository);
 
-    createQueryBuilderMock = roleRepository.createQueryBuilder = jest
+    createQueryBuilderMock = roleRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

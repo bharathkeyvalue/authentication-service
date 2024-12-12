@@ -29,7 +29,7 @@ export class RoleRepository extends BaseRepository<Role> {
   }
 
   async getRolesForGroupId(groupId: string): Promise<Role[]> {
-    return this.createQueryBuilder('role')
+    return (await this.getQueryBuilder('role'))
       .leftJoinAndSelect(GroupRole, 'groupRole', 'role.id = groupRole.roleId')
       .where('groupRole.groupId = :groupId', { groupId })
       .getMany();

@@ -47,7 +47,7 @@ describe('test Role repository', () => {
     updateMock = roleRepository.update = jest.fn();
     findMock = roleRepository.find = jest.fn();
 
-    createQueryBuilderMock = roleRepository.createQueryBuilder = jest
+    createQueryBuilderMock = roleRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

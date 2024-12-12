@@ -175,7 +175,7 @@ describe('test Group Service', () => {
     userGroupRepository = moduleRef.get(UserGroupRepository);
     dataSource = moduleRef.get(DataSource);
 
-    createQueryBuilderMock = groupRepository.createQueryBuilder = jest
+    createQueryBuilderMock = groupRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

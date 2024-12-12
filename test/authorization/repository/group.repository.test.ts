@@ -48,7 +48,7 @@ describe('test Group repository', () => {
     updateMock = groupRepository.update = jest.fn();
     findMock = groupRepository.find = jest.fn();
 
-    createQueryBuilderMock = groupRepository.createQueryBuilder = jest
+    createQueryBuilderMock = groupRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

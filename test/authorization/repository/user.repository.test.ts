@@ -59,7 +59,7 @@ describe('test User repository', () => {
     updateMock = userRepository.update = jest.fn();
     findMock = userRepository.find = jest.fn();
 
-    createQueryBuilderMock = userRepository.createQueryBuilder = jest
+    createQueryBuilderMock = userRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

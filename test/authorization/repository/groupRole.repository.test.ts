@@ -26,7 +26,7 @@ describe('test GroupRole repository', () => {
 
     groupRoleRepository = moduleRef.get(GroupRoleRepository);
 
-    createQueryBuilderMock = groupRoleRepository.createQueryBuilder = jest
+    createQueryBuilderMock = groupRoleRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         innerJoinAndSelect: jest.fn().mockReturnThis(),

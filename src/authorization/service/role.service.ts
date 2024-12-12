@@ -24,6 +24,7 @@ import { RoleServiceInterface } from './role.service.interface';
 import { RoleCacheServiceInterface } from './rolecache.service.interface';
 import SearchService from './search.service';
 import { ExecutionManager } from '../../util/execution.manager';
+import { getConnection } from '../../util/database.connection';
 
 @Injectable()
 export class RoleService implements RoleServiceInterface {
@@ -43,7 +44,7 @@ export class RoleService implements RoleServiceInterface {
       ['name', 'role.name'],
       ['updatedAt', 'role.updated_at'],
     ]);
-    let queryBuilder = this.rolesRepository.createQueryBuilder('role');
+    let queryBuilder = await this.rolesRepository.getQueryBuilder('role');
     if (input?.search) {
       queryBuilder = this.searchService.generateSearchTermForEntity(
         queryBuilder,
@@ -106,7 +107,7 @@ export class RoleService implements RoleServiceInterface {
       throw new RoleDeleteNotAllowedException();
     }
 
-    await this.dataSource.manager.transaction(async (entityManager) => {
+    await (await getConnection()).manager.transaction(async (entityManager) => {
       const rolePermissionsRepo = entityManager.getRepository(RolePermission);
       const roleRepo = entityManager.getRepository(Role);
       await rolePermissionsRepo.softDelete({ roleId: id });
@@ -155,7 +156,7 @@ export class RoleService implements RoleServiceInterface {
       })),
     );
 
-    await this.dataSource.manager.transaction(async (entityManager) => {
+    await (await getConnection()).manager.transaction(async (entityManager) => {
       const rolePermissionsRepo = entityManager.getRepository(RolePermission);
       await rolePermissionsRepo.remove(permissionsToBeRemovedFromRole);
       await rolePermissionsRepo.save(rolePermissions);

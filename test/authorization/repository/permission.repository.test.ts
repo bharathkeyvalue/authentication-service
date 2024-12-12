@@ -60,7 +60,7 @@ describe('test Permission repository', () => {
     updateMock = permissionRepository.update = jest.fn();
     softDeleteMock = permissionRepository.softDelete = jest.fn();
 
-    createQueryBuilderMock = permissionRepository.createQueryBuilder = jest
+    createQueryBuilderMock = permissionRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         innerJoin: jest.fn().mockReturnThis(),

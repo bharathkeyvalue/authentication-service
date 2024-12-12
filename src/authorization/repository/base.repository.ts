@@ -1,4 +1,13 @@
-import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
+import {
+  DataSource,
+  EntityTarget,
+  ObjectLiteral,
+  Repository,
+  SelectQueryBuilder,
+  QueryRunner,
+  SaveOptions,
+  DeepPartial,
+} from 'typeorm';
 import { getConnection } from '../../util/database.connection';
 
 export class BaseRepository<T extends ObjectLiteral> extends Repository<T> {
@@ -52,5 +61,18 @@ export class BaseRepository<T extends ObjectLiteral> extends Repository<T> {
   async count(options?: any): Promise<number> {
     const repository = await this.getDynamicRepository();
     return repository.count(options);
+  }
+
+  async getQueryBuilder(
+    alias?: string,
+    queryRunner?: QueryRunner,
+  ): Promise<SelectQueryBuilder<T>> {
+    const repository = await this.getDynamicRepository();
+    return repository.createQueryBuilder(alias, queryRunner);
+  }
+
+  async save(entity: any, options?: SaveOptions): Promise<any> {
+    const repository = await this.getDynamicRepository();
+    return repository.save(entity, options);
   }
 }

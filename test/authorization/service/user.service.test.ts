@@ -151,7 +151,7 @@ describe('test UserService', () => {
     saveMock = userRepository.save = jest.fn();
     updateUserByIdMock = userRepository.updateUserById = jest.fn();
 
-    createQueryBuilderMock = userRepository.createQueryBuilder = jest
+    createQueryBuilderMock = userRepository.getQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

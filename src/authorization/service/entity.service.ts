@@ -14,8 +14,8 @@ import { EntityModelRepository } from '../repository/entity.repository';
 import { EntityPermissionRepository } from '../repository/entityPermission.repository';
 import { PermissionRepository } from '../repository/permission.repository';
 import { EntityServiceInterface } from './entity.service.interface';
-import { ExecutionManager } from '../../util/execution.manager';
 import { getConnection } from '../../util/database.connection';
+import { ExecutionManager } from '../../util/execution.manager';
 
 @Injectable()
 export class EntityService implements EntityServiceInterface {
@@ -114,7 +114,8 @@ export class EntityService implements EntityServiceInterface {
       })),
     );
 
-    await this.dataSource.manager.transaction(async (entityManager) => {
+    const entityManager = (await getConnection()).manager;
+    await entityManager.transaction(async (entityManager) => {
       const entityPermissionsRepo = entityManager.getRepository(
         EntityPermission,
       );

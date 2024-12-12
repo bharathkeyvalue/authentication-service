@@ -16,7 +16,7 @@ export class UserRepository extends BaseRepository<User> {
   }
 
   async getUserByEmail(email: string) {
-    return this.createQueryBuilder('user')
+    return (await this.getQueryBuilder('user'))
       .where('lower(user.email) = lower(:email)', { email })
       .getOne();
   }
@@ -42,14 +42,14 @@ export class UserRepository extends BaseRepository<User> {
   }
 
   async getUsersByGroupId(groupId: string): Promise<User[]> {
-    return this.createQueryBuilder('user')
+    return (await this.getQueryBuilder('user'))
       .leftJoinAndSelect(UserGroup, 'userGroup', 'userGroup.userId = user.id')
       .where('userGroup.groupId = :groupId', { groupId })
       .getMany();
   }
 
   async getUserCountForGroupId(groupId: string): Promise<number> {
-    return this.createQueryBuilder('user')
+    return (await this.getQueryBuilder('user'))
       .innerJoinAndSelect(UserGroup, 'userGroup', 'userGroup.userId = user.id')
       .where('userGroup.groupId = :groupId', { groupId })
       .getCount();

@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { DataSource, SelectQueryBuilder } from 'typeorm';
+import { DataSource, EntityManager, SelectQueryBuilder } from 'typeorm';
 import { UserNotAuthorized } from '../../authentication/exception/userauth.exception';
 import { FilterBuilder } from '../../common/filter.builder';
 import { SearchEntity } from '../../constants/search.entity.enum';
@@ -33,6 +33,7 @@ import SearchService from './search.service';
 import { UserServiceInterface } from './user.service.interface';
 import { UserCacheServiceInterface } from './usercache.service.interface';
 import { ExecutionManager } from '../../util/execution.manager';
+import { getConnection } from '../../util/database.connection';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
@@ -54,7 +55,7 @@ export class UserService implements UserServiceInterface {
     private roleCacheService: RoleCacheServiceInterface,
   ) {}
 
-  getAllUsers(input?: UserInputFilter): Promise<[User[], number]> {
+  async getAllUsers(input?: UserInputFilter): Promise<[User[], number]> {
     const SortFieldMapping = new Map([
       ['firstName', 'user.firstName'],
       ['updatedAt', 'user.updated_at'],
@@ -74,7 +75,7 @@ export class UserService implements UserServiceInterface {
         );
       }
     };
-    const qb = this.userRepository.createQueryBuilder('user');
+    const qb = await this.userRepository.getQueryBuilder('user');
     if (input?.search) {
       this.searchService.generateSearchTermForEntity(
         qb,
@@ -156,7 +157,7 @@ export class UserService implements UserServiceInterface {
       user.groups.map((group) => ({ userId: id, groupId: group })),
     );
 
-    await this.dataSource.manager.transaction(async (entityManager) => {
+    await (await getConnection()).manager.transaction(async (entityManager) => {
       const userGroupsRepo = entityManager.getRepository(UserGroup);
       await userGroupsRepo.remove(groupsToBeRemovedFromUser);
       await userGroupsRepo.save(userGroups);
@@ -227,7 +228,7 @@ export class UserService implements UserServiceInterface {
       throw new UserNotFoundException(id);
     }
 
-    await this.dataSource.manager.transaction(async (entityManager) => {
+    await (await getConnection()).manager.transaction(async (entityManager) => {
       const userRepo = entityManager.getRepository(User);
       const userGroupRepo = entityManager.getRepository(UserGroup);
       const userPermissionRepo = entityManager.getRepository(UserPermission);
@@ -370,7 +371,7 @@ export class UserService implements UserServiceInterface {
         'Username should be provided with email or phone',
       );
     }
-    let query = this.userRepository.createQueryBuilder('user');
+    let query = await this.userRepository.getQueryBuilder('user');
     if (email) {
       query = query.orWhere('lower(user.email) = lower(:email)', {
         email: nullCheckedEmail,

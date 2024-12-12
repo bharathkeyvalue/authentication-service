@@ -11,7 +11,7 @@ export class GroupRoleRepository extends BaseRepository<GroupRole> {
   }
 
   async getGroupCountForRoleId(roleId: string): Promise<number> {
-    return this.createQueryBuilder('groupRole')
+    return (await this.getQueryBuilder('groupRole'))
       .innerJoinAndSelect(Group, 'group', 'group.id = groupRole.groupId')
       .where('groupRole.roleId= :roleId', { roleId })
       .getCount();

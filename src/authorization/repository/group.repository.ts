@@ -29,7 +29,7 @@ export class GroupRepository extends BaseRepository<Group> {
   }
 
   async getGroupsForUserId(userId: string): Promise<Group[]> {
-    return this.createQueryBuilder('group')
+    return (await this.getQueryBuilder('group'))
       .leftJoinAndSelect(UserGroup, 'userGroup', 'group.id = userGroup.groupId')
       .where('userGroup.userId = :userId', { userId })
       .getMany();
