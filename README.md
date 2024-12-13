@@ -55,14 +55,17 @@ Developers can customise this as per their requirement.
 -   Clone the repo and execute command `npm install`
 -   Create a copy of the env.sample file and rename it as .env
 -   Install postgres and redis
+-   Create a restricted tenant user that cannot bypass RLS policies
 -   Provide postgres, redis secrets and default user details in .env file as mentioned below
 
 | Database configuration(Required) |  |
 |--|--|
 |POSTGRES_HOST  | localhost |
 |POSTGRES_PORT  |  5432|
-|POSTGRES_USER  | postgres |
-|POSTGRES_PASSWORD  | postgres |
+|POSTGRES_ADMIN_USER  | postgres |
+|POSTGRES_ADMIN_PASSWORD  | postgres |
+|POSTGRES_TENANT_USER  | tenant |
+|POSTGRES_TENANT_PASSWORD  | tenant |
 |POSTGRES_DB  | auth_service |
 
 &nbsp;
