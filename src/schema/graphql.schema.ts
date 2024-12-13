@@ -166,11 +166,6 @@ export interface RoleSearchCondition {
     name?: StringSearchCondition;
 }
 
-export interface NewTenantInput {
-    name: string;
-    domain: string;
-}
-
 export interface UpdateUserInput {
     firstName?: string;
     middleName?: string;
@@ -233,6 +228,11 @@ export interface PaginationInput {
     offset?: number;
 }
 
+export interface NewTenantInput {
+    name: string;
+    domain: string;
+}
+
 export interface Paginated {
     totalCount?: number;
 }
@@ -266,11 +266,11 @@ export interface IMutation {
     updateRole(id: string, input: UpdateRoleInput): Role | Promise<Role>;
     deleteRole(id: string): Role | Promise<Role>;
     updateRolePermissions(id: string, input: UpdateRolePermissionInput): Permission[] | Promise<Permission[]>;
-    createTenant(input: NewTenantInput): Tenant | Promise<Tenant>;
     updateUser(id: string, input: UpdateUserInput): User | Promise<User>;
     deleteUser(id: string): User | Promise<User>;
     updateUserPermissions(id: string, input: UpdateUserPermissionInput): Permission[] | Promise<Permission[]>;
     updateUserGroups(id: string, input: UpdateUserGroupInput): UserGroupResponse[] | Promise<UserGroupResponse[]>;
+    createTenant(input: NewTenantInput): Tenant | Promise<Tenant>;
 }
 
 export interface TokenResponse {
@@ -357,12 +357,6 @@ export interface RolePaginated extends Paginated {
     results?: Role[];
 }
 
-export interface Tenant {
-    id: string;
-    name: string;
-    domain: string;
-}
-
 export interface UserPaginated extends Paginated {
     totalCount?: number;
     results?: User[];
@@ -384,4 +378,10 @@ export interface User {
 export interface UserGroupResponse {
     id: string;
     name: string;
+}
+
+export interface Tenant {
+    id: string;
+    name: string;
+    domain: string;
 }

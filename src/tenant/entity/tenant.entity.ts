@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import BaseEntity from './base.entity';
+import BaseEntity from '../../authorization/entity/base.entity';
 
 @Entity()
 class Tenant extends BaseEntity {
