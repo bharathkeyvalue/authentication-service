@@ -15,8 +15,10 @@ import { ExecutionContextBinder } from './middleware/executionContext.middleware
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
-        POSTGRES_USER: Joi.string().required(),
-        POSTGRES_PASSWORD: Joi.string().required(),
+        POSTGRES_ADMIN_USER: Joi.string().required(),
+        POSTGRES_ADMIN_PASSWORD: Joi.string().required(),
+        POSTGRES_TENANT_USER: Joi.string().required(),
+        POSTGRES_TENANT_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
         PORT: Joi.number(),
         JWT_SECRET: Joi.string().required().min(10),
