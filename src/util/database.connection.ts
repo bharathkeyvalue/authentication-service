@@ -41,7 +41,9 @@ export async function getConnectionForTenant(
     synchronize: false,
     logging: ['error'],
     namingStrategy: new SnakeNamingStrategy(),
-    extra: { max: process.env.POSTGRES_TENANT_MAX_CONNECTION_LIMIT },
+    ...(process.env.POSTGRES_TENANT_MAX_CONNECTION_LIMIT
+      ? { extra: { max: process.env.POSTGRES_TENANT_MAX_CONNECTION_LIMIT } }
+      : {}),
   }).initialize();
 
   await switchToTenant(tenantId, newConnection);
