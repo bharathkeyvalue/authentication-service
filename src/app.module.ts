@@ -7,7 +7,7 @@ import { AppGraphQLModule } from './graphql/graphql.module';
 import { UserAuthModule } from './authentication/authentication.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HealthModule } from './health/health.module';
-import { ExecutionContextBinder } from './middleware/executionId.middleware';
+import { ExecutionContextBinder } from './middleware/executionContext.middleware';
 
 @Module({
   imports: [
