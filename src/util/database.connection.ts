@@ -31,8 +31,8 @@ export async function getConnectionForTenant(
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
+    username: process.env.POSTGRES_TENANT_USER,
+    password: process.env.POSTGRES_TENANT_PASSWORD,
     database: process.env.POSTGRES_DB,
     entities: [
       __dirname + '/../**/*.entity.ts',
@@ -68,3 +68,30 @@ const switchToTenant = async (
     );
   }
 };
+
+export async function getConnectionAsOwner(): Promise<DataSource> {
+  if (!getConnectionManager().has('Owner'))
+    return await new DataSource({
+      name: 'Owner',
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: Number(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_ADMIN_USER,
+      password: process.env.POSTGRES_ADMIN_PASSWORD,
+      database: process.env.POSTGRES_DB,
+      entities: [__dirname + '/../**/*.entity.js'],
+      synchronize: false,
+      logging: ['error'],
+      namingStrategy: new SnakeNamingStrategy(),
+      migrationsTableName: 'migrations',
+      migrations: [__dirname + '/../migrations/*.js'],
+      ...(process.env.POSTGRES_ADMIN_MAX_CONNECTION_LIMIT
+        ? { extra: { max: process.env.POSTGRES_ADMIN_MAX_CONNECTION_LIMIT } }
+        : {}),
+    }).initialize();
+  const con = getConnectionManager().get('Owner');
+  const existingConnection = await Promise.resolve(
+    con.isConnected ? con : con.connect(),
+  );
+  return existingConnection;
+}
