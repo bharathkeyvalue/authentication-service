@@ -202,7 +202,7 @@ export class UserService implements UserServiceInterface {
       })),
     );
 
-    const userPermissionsUpdated = await this.dataSource.transaction(
+    const userPermissionsUpdated = await (await getConnection()).transaction(
       async (entityManager) => {
         const userPermissionsRepo = entityManager.getRepository(UserPermission);
         await userPermissionsRepo.remove(userPermissionsToBeRemoved);

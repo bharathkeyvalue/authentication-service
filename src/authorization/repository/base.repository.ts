@@ -6,7 +6,7 @@ import {
   SelectQueryBuilder,
   QueryRunner,
   SaveOptions,
-  DeepPartial,
+  RemoveOptions,
 } from 'typeorm';
 import { getConnection } from '../../util/database.connection';
 
@@ -74,5 +74,10 @@ export class BaseRepository<T extends ObjectLiteral> extends Repository<T> {
   async save(entity: any, options?: SaveOptions): Promise<any> {
     const repository = await this.getDynamicRepository();
     return repository.save(entity, options);
+  }
+
+  async remove(entity: any, options?: RemoveOptions): Promise<any> {
+    const repository = await this.getDynamicRepository();
+    return repository.remove(entity, options);
   }
 }
