@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import {
   NewEntityInput,
@@ -14,8 +14,8 @@ import { EntityModelRepository } from '../repository/entity.repository';
 import { EntityPermissionRepository } from '../repository/entityPermission.repository';
 import { PermissionRepository } from '../repository/permission.repository';
 import { EntityServiceInterface } from './entity.service.interface';
-import { getConnection } from '../../util/database.connection';
 import { ExecutionManager } from '../../util/execution.manager';
+import { TENANT_CONNECTION } from '../../database/database.constants';
 
 @Injectable()
 export class EntityService implements EntityServiceInterface {
@@ -23,6 +23,7 @@ export class EntityService implements EntityServiceInterface {
     private entityRepository: EntityModelRepository,
     private entityPermissionRepository: EntityPermissionRepository,
     private permissionRepository: PermissionRepository,
+    @Inject(TENANT_CONNECTION)
     private dataSource: DataSource,
   ) {}
 
@@ -62,8 +63,7 @@ export class EntityService implements EntityServiceInterface {
     if (!existingEntity) {
       throw new EntityNotFoundException(id);
     }
-    const entityManager = (await getConnection()).manager;
-    await entityManager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const entityRepo = entityManager.getRepository(EntityModel);
       const entityPermissionRepo = entityManager.getRepository(
         EntityPermission,
@@ -114,8 +114,7 @@ export class EntityService implements EntityServiceInterface {
       })),
     );
 
-    const entityManager = (await getConnection()).manager;
-    await entityManager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const entityPermissionsRepo = entityManager.getRepository(
         EntityPermission,
       );

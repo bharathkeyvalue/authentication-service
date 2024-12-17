@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import UserPermission from '../entity/userPermission.entity';
 import { BaseRepository } from './base.repository';
+import { TENANT_CONNECTION } from '../../database/database.constants';
 
 @Injectable()
 export class UserPermissionRepository extends BaseRepository<UserPermission> {
-  constructor(private dataSource: DataSource) {
+  constructor(
+    @Inject(TENANT_CONNECTION)
+    private dataSource: DataSource,
+  ) {
     super(UserPermission, dataSource);
   }
 

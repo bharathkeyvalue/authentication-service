@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, In } from 'typeorm';
 import Group from '../entity/group.entity';
 import UserGroup from '../entity/userGroup.entity';
 import { BaseRepository } from './base.repository';
+import { TENANT_CONNECTION } from '../../database/database.constants';
 
 @Injectable()
 export class GroupRepository extends BaseRepository<Group> {
-  constructor(private dataSource: DataSource) {
+  constructor(
+    @Inject(TENANT_CONNECTION)
+    private dataSource: DataSource,
+  ) {
     super(Group, dataSource);
   }
 
@@ -29,7 +33,7 @@ export class GroupRepository extends BaseRepository<Group> {
   }
 
   async getGroupsForUserId(userId: string): Promise<Group[]> {
-    return (await this.getQueryBuilder('group'))
+    return this.createQueryBuilder('group')
       .leftJoinAndSelect(UserGroup, 'userGroup', 'group.id = userGroup.groupId')
       .where('userGroup.userId = :userId', { userId })
       .getMany();

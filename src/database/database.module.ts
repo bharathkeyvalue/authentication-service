@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { databaseProvider } from './database.provider';
 
 @Module({
   imports: [
@@ -25,5 +26,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       }),
     }),
   ],
+  exports: [databaseProvider],
+  providers: [databaseProvider],
 })
 export class DatabaseModule {}

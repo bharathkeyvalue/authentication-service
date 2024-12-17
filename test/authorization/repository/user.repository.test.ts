@@ -4,6 +4,7 @@ import { DataSource, In, UpdateResult } from 'typeorm';
 import UserGroup from '../../../src/authorization/entity/userGroup.entity';
 import { UserRepository } from '../../../src/authorization/repository/user.repository';
 import { Status, UpdateUserInput } from '../../../src/schema/graphql.schema';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_USER_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 const VALID_EMAIL = 'test@valid.com';
@@ -49,6 +50,10 @@ describe('test User repository', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
+        },
       ],
     }).compile();
 
@@ -59,7 +64,7 @@ describe('test User repository', () => {
     updateMock = userRepository.update = jest.fn();
     findMock = userRepository.find = jest.fn();
 
-    createQueryBuilderMock = userRepository.getQueryBuilder = jest
+    createQueryBuilderMock = userRepository.createQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

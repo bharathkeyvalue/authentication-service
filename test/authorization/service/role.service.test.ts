@@ -24,6 +24,7 @@ import {
   NewRoleInput,
   UpdateRoleInput,
 } from '../../../src/schema/graphql.schema';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_ROLE_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 const INVALID_ROLE_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f9';
@@ -96,6 +97,10 @@ describe('test Role Service', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
+        },
       ],
     }).compile();
 
@@ -103,7 +108,7 @@ describe('test Role Service', () => {
     roleRepository = moduleRef.get(RoleRepository);
     permissionRepository = moduleRef.get(PermissionRepository);
 
-    createQueryBuilderMock = roleRepository.getQueryBuilder = jest
+    createQueryBuilderMock = roleRepository.createQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

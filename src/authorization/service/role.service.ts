@@ -24,8 +24,7 @@ import { RoleServiceInterface } from './role.service.interface';
 import { RoleCacheServiceInterface } from './rolecache.service.interface';
 import SearchService from './search.service';
 import { ExecutionManager } from '../../util/execution.manager';
-import { getConnection } from '../../util/database.connection';
-
+import { TENANT_CONNECTION } from '../../database/database.constants';
 @Injectable()
 export class RoleService implements RoleServiceInterface {
   constructor(
@@ -35,6 +34,7 @@ export class RoleService implements RoleServiceInterface {
     private groupRoleRepository: GroupRoleRepository,
     private rolePermissionRepository: RolePermissionRepository,
     private permissionRepository: PermissionRepository,
+    @Inject(TENANT_CONNECTION)
     private dataSource: DataSource,
     private searchService: SearchService,
   ) {}
@@ -44,7 +44,7 @@ export class RoleService implements RoleServiceInterface {
       ['name', 'role.name'],
       ['updatedAt', 'role.updated_at'],
     ]);
-    let queryBuilder = await this.rolesRepository.getQueryBuilder('role');
+    let queryBuilder = this.rolesRepository.createQueryBuilder('role');
     if (input?.search) {
       queryBuilder = this.searchService.generateSearchTermForEntity(
         queryBuilder,
@@ -107,7 +107,7 @@ export class RoleService implements RoleServiceInterface {
       throw new RoleDeleteNotAllowedException();
     }
 
-    await (await getConnection()).manager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const rolePermissionsRepo = entityManager.getRepository(RolePermission);
       const roleRepo = entityManager.getRepository(Role);
       await rolePermissionsRepo.softDelete({ roleId: id });
@@ -156,7 +156,7 @@ export class RoleService implements RoleServiceInterface {
       })),
     );
 
-    await (await getConnection()).manager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const rolePermissionsRepo = entityManager.getRepository(RolePermission);
       await rolePermissionsRepo.remove(permissionsToBeRemovedFromRole);
       await rolePermissionsRepo.save(rolePermissions);

@@ -15,6 +15,7 @@ import {
   NewPermissionInput,
   UpdatePermissionInput,
 } from '../../../src/schema/graphql.schema';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_PERMISSION_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 const INVALID_PERMISSION_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f9';
@@ -58,6 +59,10 @@ describe('test Permission service', () => {
         {
           provide: PermissionCacheServiceInterface,
           useValue: mockPermissionCacheService,
+        },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
         },
       ],
     }).compile();

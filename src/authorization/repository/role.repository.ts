@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UpdateRoleInput } from 'src/schema/graphql.schema';
 import { DataSource, In } from 'typeorm';
 import GroupRole from '../entity/groupRole.entity';
 import Role from '../entity/role.entity';
 import { BaseRepository } from './base.repository';
+import { TENANT_CONNECTION } from '../../database/database.constants';
 
 @Injectable()
 export class RoleRepository extends BaseRepository<Role> {
-  constructor(private dataSource: DataSource) {
+  constructor(
+    @Inject(TENANT_CONNECTION)
+    private dataSource: DataSource,
+  ) {
     super(Role, dataSource);
   }
 
@@ -29,7 +33,7 @@ export class RoleRepository extends BaseRepository<Role> {
   }
 
   async getRolesForGroupId(groupId: string): Promise<Role[]> {
-    return (await this.getQueryBuilder('role'))
+    return this.createQueryBuilder('role')
       .leftJoinAndSelect(GroupRole, 'groupRole', 'role.id = groupRole.roleId')
       .where('groupRole.groupId = :groupId', { groupId })
       .getMany();

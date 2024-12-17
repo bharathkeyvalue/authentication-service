@@ -26,6 +26,7 @@ import {
   Status,
   UpdateGroupInput,
 } from '../../../src/schema/graphql.schema';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_GROUP_ID = '3282163d-fd5a-4026-b912-1a9cc5eefc98';
 const groups: Group[] = [
@@ -162,6 +163,10 @@ describe('test Group Service', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
+        },
         // {
         //   provide: DataSource,
         //   useFactory: dataSourceMockFactory,
@@ -175,7 +180,7 @@ describe('test Group Service', () => {
     userGroupRepository = moduleRef.get(UserGroupRepository);
     dataSource = moduleRef.get(DataSource);
 
-    createQueryBuilderMock = groupRepository.getQueryBuilder = jest
+    createQueryBuilderMock = groupRepository.createQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

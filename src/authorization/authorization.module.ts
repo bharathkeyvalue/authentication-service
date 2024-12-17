@@ -52,6 +52,7 @@ import { UserServiceInterface } from './service/user.service.interface';
 import { UserCacheService } from './service/usercache.service';
 import { UserCacheServiceInterface } from './service/usercache.service.interface';
 import { TenantModule } from '../tenant/tenant.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { TenantModule } from '../tenant/tenant.module';
     ]),
     TenantModule,
     RedisCacheModule,
+    DatabaseModule,
   ],
   providers: [
     GroupResolver,

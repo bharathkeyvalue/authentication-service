@@ -25,7 +25,7 @@ import {
 } from '../exception/userauth.exception';
 import { Authenticatable } from '../interfaces/authenticatable';
 import { TokenService } from './token.service';
-import { getConnection } from '../../util/database.connection';
+import { TENANT_CONNECTION } from '../../database/database.constants';
 
 @Injectable()
 export default class PasswordAuthService implements Authenticatable {
@@ -33,6 +33,7 @@ export default class PasswordAuthService implements Authenticatable {
     @Inject(UserServiceInterface) private userService: UserServiceInterface,
     private tokenService: TokenService,
     private authenticationHelper: AuthenticationHelper,
+    @Inject(TENANT_CONNECTION)
     private dataSource: DataSource,
     private configService: ConfigService,
   ) {}
@@ -87,34 +88,32 @@ export default class PasswordAuthService implements Authenticatable {
     userFromInput.lastName = userDetails.lastName;
     userFromInput.status = Status.INVITED;
     let invitationToken: { token: any; tokenExpiryTime?: any };
-    const transaction = await (await getConnection()).manager.transaction(
-      async () => {
-        const savedUser = await this.userService.createUser(userFromInput);
-        invitationToken = this.authenticationHelper.generateInvitationToken(
-          { id: savedUser.id },
-          this.configService.get('INVITATION_TOKEN_EXPTIME'),
-        );
-        await this.userService.updateField(
-          savedUser.id,
-          'inviteToken',
-          invitationToken.token,
-        );
-        const user = await this.userService.getUserById(savedUser.id);
-        const userResponse = {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          inviteToken: user?.inviteToken,
-          status: user.status,
-          tenantId: user.tenantId,
-        };
-        return {
-          inviteToken: invitationToken.token,
-          tokenExpiryTime: invitationToken.tokenExpiryTime,
-          user: userResponse,
-        };
-      },
-    );
+    const transaction = await this.dataSource.manager.transaction(async () => {
+      const savedUser = await this.userService.createUser(userFromInput);
+      invitationToken = this.authenticationHelper.generateInvitationToken(
+        { id: savedUser.id },
+        this.configService.get('INVITATION_TOKEN_EXPTIME'),
+      );
+      await this.userService.updateField(
+        savedUser.id,
+        'inviteToken',
+        invitationToken.token,
+      );
+      const user = await this.userService.getUserById(savedUser.id);
+      const userResponse = {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        inviteToken: user?.inviteToken,
+        status: user.status,
+        tenantId: user.tenantId,
+      };
+      return {
+        inviteToken: invitationToken.token,
+        tokenExpiryTime: invitationToken.tokenExpiryTime,
+        user: userResponse,
+      };
+    });
     return transaction;
   }
 

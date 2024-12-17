@@ -2,13 +2,13 @@ import { Test } from '@nestjs/testing';
 import { Entity, UpdateEntityInput } from 'src/schema/graphql.schema';
 import { DataSource, UpdateResult } from 'typeorm';
 import { EntityModelRepository } from '../../../src/authorization/repository/entity.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_ENTITY_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 
 const entity: Entity = {
   id: VALID_ENTITY_ID,
   name: 'Test Entity 1',
-  tenantId: '1ef2a357-d4b7-4a30-88ca-d1cc627f2994',
 };
 
 const updateResult: UpdateResult = {
@@ -32,6 +32,10 @@ describe('test Entity model repository', () => {
         EntityModelRepository,
         {
           provide: DataSource,
+          useValue: mockDataSource,
+        },
+        {
+          provide: TENANT_CONNECTION,
           useValue: mockDataSource,
         },
       ],

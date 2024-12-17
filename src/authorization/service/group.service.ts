@@ -42,7 +42,7 @@ import { UserCacheServiceInterface } from './usercache.service.interface';
 import { DUPLICATE_ERROR_CODE } from '../../constants/db.error.constants';
 import { LoggerService } from '../../logger/logger.service';
 import { ExecutionManager } from '../../util/execution.manager';
-import { getConnection } from '../../util/database.connection';
+import { TENANT_CONNECTION } from '../../database/database.constants';
 
 @Injectable()
 export class GroupService implements GroupServiceInterface {
@@ -54,6 +54,7 @@ export class GroupService implements GroupServiceInterface {
     private groupRoleRepository: GroupRoleRepository,
     private rolesRepository: RoleRepository,
     private userRepository: UserRepository,
+    @Inject(TENANT_CONNECTION)
     private dataSource: DataSource,
     @Inject(GroupCacheServiceInterface)
     private groupCacheService: GroupCacheServiceInterface,
@@ -75,7 +76,7 @@ export class GroupService implements GroupServiceInterface {
       ['name', 'group.name'],
       ['updatedAt', 'group.updated_at'],
     ]);
-    let queryBuilder = await this.groupRepository.getQueryBuilder('group');
+    let queryBuilder = this.groupRepository.createQueryBuilder('group');
 
     if (input?.search) {
       queryBuilder = this.searchService.generateSearchTermForEntity(
@@ -171,7 +172,7 @@ export class GroupService implements GroupServiceInterface {
       throw new GroupDeleteNotAllowedException();
     }
 
-    await (await getConnection()).manager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const groupRepo = entityManager.getRepository(Group);
       const groupRoleRepo = entityManager.getRepository(GroupRole);
       const groupPermissionRepo = entityManager.getRepository(GroupPermission);
@@ -223,7 +224,7 @@ export class GroupService implements GroupServiceInterface {
       })),
     );
 
-    await (await getConnection()).manager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const groupPermissionsRepo = entityManager.getRepository(GroupPermission);
       await groupPermissionsRepo.remove(permissionsToBeRemovedFromGroup);
       await groupPermissionsRepo.save(groupPermission);
@@ -252,7 +253,7 @@ export class GroupService implements GroupServiceInterface {
       userIds.map((userId) => ({ userId: userId, groupId: id })),
     );
 
-    await (await getConnection()).manager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const userGroupsRepo = entityManager.getRepository(UserGroup);
       await userGroupsRepo.remove(usersToBeRemovedFromGroup);
       await userGroupsRepo.save(userGroups);
@@ -322,7 +323,7 @@ export class GroupService implements GroupServiceInterface {
       })),
     );
 
-    await (await getConnection()).manager.transaction(async (entityManager) => {
+    await this.dataSource.manager.transaction(async (entityManager) => {
       const groupRolesRepo = entityManager.getRepository(GroupRole);
       await groupRolesRepo.remove(rolesToBeRemovedFromGroup);
       await groupRolesRepo.save(groupRoles);

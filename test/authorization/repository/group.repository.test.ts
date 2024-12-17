@@ -5,6 +5,7 @@ import * as typeorm from 'typeorm';
 import { DataSource, UpdateResult } from 'typeorm';
 import UserGroup from '../../../src/authorization/entity/userGroup.entity';
 import { GroupRepository } from '../../../src/authorization/repository/group.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_GROUP_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 
@@ -39,6 +40,10 @@ describe('test Group repository', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
+        },
       ],
     }).compile();
 
@@ -48,7 +53,7 @@ describe('test Group repository', () => {
     updateMock = groupRepository.update = jest.fn();
     findMock = groupRepository.find = jest.fn();
 
-    createQueryBuilderMock = groupRepository.getQueryBuilder = jest
+    createQueryBuilderMock = groupRepository.createQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

@@ -33,6 +33,7 @@ import PasswordAuthService from './service/password.auth.service';
 import { RecaptchaService } from './service/recaptcha.service';
 import { TokenService } from './service/token.service';
 import TwilioOTPService from './service/twilio.otp.service';
+import { DatabaseModule } from '../database/database.module';
 
 const providers: Provider[] = [
   UserAuthResolver,
@@ -74,6 +75,7 @@ const providers: Provider[] = [
     AuthorizationModule,
     TwilioImplModule,
     HttpModule,
+    DatabaseModule,
   ],
   providers,
   controllers: [GoogleAuthController],

@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import UserPermission from 'src/authorization/entity/userPermission.entity';
 import { DataSource } from 'typeorm';
 import { UserPermissionRepository } from '../../../src/authorization/repository/userPermission.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_PERMISSION_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 
@@ -27,6 +28,10 @@ describe('test UserPermission repository', () => {
         UserPermissionRepository,
         {
           provide: DataSource,
+          useValue: mockDataSource,
+        },
+        {
+          provide: TENANT_CONNECTION,
           useValue: mockDataSource,
         },
       ],

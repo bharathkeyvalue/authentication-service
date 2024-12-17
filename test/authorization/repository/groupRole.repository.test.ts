@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import Group from '../../../src/authorization/entity/group.entity';
 import { GroupRoleRepository } from '../../../src/authorization/repository/groupRole.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_ROLE_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 
@@ -21,12 +22,16 @@ describe('test GroupRole repository', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
+        },
       ],
     }).compile();
 
     groupRoleRepository = moduleRef.get(GroupRoleRepository);
 
-    createQueryBuilderMock = groupRoleRepository.getQueryBuilder = jest
+    createQueryBuilderMock = groupRoleRepository.createQueryBuilder = jest
       .fn()
       .mockReturnValue({
         innerJoinAndSelect: jest.fn().mockReturnThis(),

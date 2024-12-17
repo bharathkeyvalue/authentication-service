@@ -8,6 +8,7 @@ import { TokenService } from '../../../src/authentication/service/token.service'
 import User from '../../../src/authorization/entity/user.entity';
 import { UserServiceInterface } from '../../../src/authorization/service/user.service.interface';
 import { Status } from '../../../src/schema/graphql.schema';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 let users: User[] = [
   {
@@ -49,6 +50,10 @@ describe('test PasswordAuthService', () => {
         { provide: TokenService, useValue: tokenService },
         {
           provide: DataSource,
+          useValue: mockDataSource,
+        },
+        {
+          provide: TENANT_CONNECTION,
           useValue: mockDataSource,
         },
         PasswordAuthService,

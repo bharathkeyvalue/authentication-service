@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import GroupPermission from 'src/authorization/entity/groupPermission.entity';
 import { DataSource } from 'typeorm';
 import { GroupPermissionRepository } from '../../../src/authorization/repository/groupPermission.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_PERMISSION_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 const VALID_GROUP_ID = '3282163d-fd5a-4026-b912-1a9cc5eefc98';
@@ -28,6 +29,10 @@ describe('test GroupPermission repository', () => {
         GroupPermissionRepository,
         {
           provide: DataSource,
+          useValue: mockDataSource,
+        },
+        {
+          provide: TENANT_CONNECTION,
           useValue: mockDataSource,
         },
       ],

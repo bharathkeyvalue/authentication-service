@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import RolePermission from 'src/authorization/entity/rolePermission.entity';
 import { DataSource } from 'typeorm';
 import { RolePermissionRepository } from '../../../src/authorization/repository/rolePermission.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 describe('test RolePermission repository', () => {
   let rolePermissionRepository: RolePermissionRepository;
@@ -30,6 +31,10 @@ describe('test RolePermission repository', () => {
         RolePermissionRepository,
         {
           provide: DataSource,
+          useValue: mockDataSource,
+        },
+        {
+          provide: TENANT_CONNECTION,
           useValue: mockDataSource,
         },
       ],

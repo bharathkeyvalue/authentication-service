@@ -23,6 +23,7 @@ import { UserServiceInterface } from '../../../src/authorization/service/user.se
 import { UserCacheServiceInterface } from '../../../src/authorization/service/usercache.service.interface';
 import { RedisCacheService } from '../../../src/cache/redis-cache/redis-cache.service';
 import { Status } from '../../../src/schema/graphql.schema';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const users: User[] = [
   {
@@ -142,6 +143,10 @@ describe('test UserService', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
+        },
       ],
     }).compile();
     userService = moduleRef.get<UserServiceInterface>(UserService);
@@ -151,7 +156,7 @@ describe('test UserService', () => {
     saveMock = userRepository.save = jest.fn();
     updateUserByIdMock = userRepository.updateUserById = jest.fn();
 
-    createQueryBuilderMock = userRepository.getQueryBuilder = jest
+    createQueryBuilderMock = userRepository.createQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

@@ -4,6 +4,7 @@ import { UpdateRoleInput } from 'src/schema/graphql.schema';
 import { DataSource, In, UpdateResult } from 'typeorm';
 import GroupRole from '../../../src/authorization/entity/groupRole.entity';
 import { RoleRepository } from '../../../src/authorization/repository/role.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_ROLE_ID = 'ae032b1b-cc3c-4e44-9197-276ca877a7f8';
 
@@ -38,6 +39,10 @@ describe('test Role repository', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: TENANT_CONNECTION,
+          useValue: mockDataSource,
+        },
       ],
     }).compile();
 
@@ -47,7 +52,7 @@ describe('test Role repository', () => {
     updateMock = roleRepository.update = jest.fn();
     findMock = roleRepository.find = jest.fn();
 
-    createQueryBuilderMock = roleRepository.getQueryBuilder = jest
+    createQueryBuilderMock = roleRepository.createQueryBuilder = jest
       .fn()
       .mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),

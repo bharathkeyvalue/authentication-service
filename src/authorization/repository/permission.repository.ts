@@ -50,7 +50,7 @@ export class PermissionRepository extends BaseRepository<Permission> {
   }
 
   async getPermissionsByRoleId(roleId: string): Promise<Permission[]> {
-    return (await this.getQueryBuilder('permission'))
+    return this.createQueryBuilder('permission')
       .leftJoinAndSelect(
         RolePermission,
         'rolePermission',
@@ -61,7 +61,7 @@ export class PermissionRepository extends BaseRepository<Permission> {
   }
 
   async getPermissionsByGroupId(groupId: string): Promise<Permission[]> {
-    return (await this.getQueryBuilder('permission'))
+    return this.createQueryBuilder('permission')
       .leftJoinAndSelect(
         GroupPermission,
         'groupPermission',
@@ -72,7 +72,7 @@ export class PermissionRepository extends BaseRepository<Permission> {
   }
 
   async getPermissionsByEntityId(entityId: string): Promise<Permission[]> {
-    return (await this.getQueryBuilder('permission'))
+    return this.createQueryBuilder('permission')
       .leftJoinAndSelect(
         EntityPermission,
         'entityPermission',
@@ -85,7 +85,7 @@ export class PermissionRepository extends BaseRepository<Permission> {
   }
 
   async getPermissionsByUserId(userId: string): Promise<Permission[]> {
-    return (await this.getQueryBuilder('permission'))
+    return this.createQueryBuilder('permission')
       .leftJoinAndSelect(
         UserPermission,
         'userPermission',
@@ -98,7 +98,7 @@ export class PermissionRepository extends BaseRepository<Permission> {
   async getGroupRolePermissionsByGroupId(
     groupId: string,
   ): Promise<Permission[]> {
-    return (await this.getQueryBuilder('permission'))
+    return this.createQueryBuilder('permission')
       .innerJoin(
         RolePermission,
         'rolePermission',

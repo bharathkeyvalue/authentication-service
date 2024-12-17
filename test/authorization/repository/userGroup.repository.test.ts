@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import UserGroup from 'src/authorization/entity/userGroup.entity';
 import { DataSource } from 'typeorm';
 import { UserGroupRepository } from '../../../src/authorization/repository/userGroup.repository';
+import { TENANT_CONNECTION } from '../../../src/database/database.constants';
 
 const VALID_USER_ID = 'ccecef4f-58d3-477b-87ee-847ee22efe4d';
 const VALID_GROUP_ID = '3282163d-fd5a-4026-b912-1a9cc5eefc98';
@@ -27,6 +28,10 @@ describe('test UserGroup repository', () => {
         UserGroupRepository,
         {
           provide: DataSource,
+          useValue: mockDataSource,
+        },
+        {
+          provide: TENANT_CONNECTION,
           useValue: mockDataSource,
         },
       ],
