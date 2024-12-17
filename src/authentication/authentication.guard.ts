@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthenticationHelper } from './authentication.helper';
+import { TokenUtil } from './util/token.util';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -11,7 +12,7 @@ export class AuthGuard implements CanActivate {
     if (ctx) {
       const token = ctx.headers.authorization;
       if (token) {
-        const reqAuthToken = token.split(' ')[1];
+        const reqAuthToken = TokenUtil.extractToken(token);
         ctx.user = this.authenticationHelper.validateAuthToken(reqAuthToken);
         return true;
       }
