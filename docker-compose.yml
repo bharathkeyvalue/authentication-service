@@ -19,12 +19,19 @@ services:
   postgres:
     container_name: postgres
     image: postgres:12
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_ADMIN_USER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_TENANT_USER: ${POSTGRES_TENANT_USER}
+      POSTGRES_TENANT_PASSWORD: ${POSTGRES_TENANT_PASSWORD}
     expose:
       - '5432'
     ports:
       - '5432:5432'
     volumes:
       - /data/postgres:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     env_file:
       - docker.env
     networks:
