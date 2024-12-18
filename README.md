@@ -83,6 +83,7 @@ Developers can customise this as per their requirement.
 |JWT_TOKEN_EXPTIME|3600  |
 |JWT_REFRESH_TOKEN_EXP_TIME| 36000 |
 |ENV  |  local|
+|AUTH_KEY|  Required authentication key for tenant creation |
 
   &nbsp;
 | Other Configuration(Required) |  |
@@ -135,3 +136,17 @@ GraphQL endpoint
 http://localhost:${PORT}/auth/api/graphql
 
 [API Documentation](https://documenter.getpostman.com/view/10091423/U16ev8cG)
+
+## Multi-tenancy Support
+
+This service supports multi-tenancy with complete data isolation between tenants at the database level using PostgreSQL row-level security (RLS). Each tenant's data is isolated using a tenant_id column and RLS policies.
+
+### How it Works
+
+1. Every tenant specific entities in the system has a `tenant_id` column
+2. PostgreSQL Row Level Security (RLS) policies are enabled on all tables
+3. The `app.tenant_id` configuration parameter is set for each request
+4. Database queries are automatically filtered by the `tenant_id` through RLS policies
+
+##### Setting up Database User for Multi-tenancy
+Create a database user with restricted access (can be done using the provided init-db.sh)
