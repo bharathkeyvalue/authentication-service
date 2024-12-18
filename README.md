@@ -118,6 +118,12 @@ Developers can customise this as per their requirement.
 | OTP_WINDOW | 300  |
 | OTP_STEP | 1 |
 
+  &nbsp;
+|Multi-Tenancy Configuration(Optional)  |  |
+|--|--|
+|MULTI_TENANCY_ENABLED  | A boolean that indicates if multi-tenancy is enabled, used for handling user login |
+|DEFAULT_TENANT_ID  | Default tenant id to be used when multi-tenancy is disabled |
+
 -   Run `npm run migration:run`
 -   Run `npm run start`
 -   Service should be up and running in http://localhost:${PORT}.
