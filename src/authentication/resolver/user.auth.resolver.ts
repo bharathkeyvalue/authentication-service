@@ -126,7 +126,7 @@ export default class UserAuthResolver {
   @Mutation('generateOtp')
   @UsePipes(new ValidationPipe(GenerateOtpInputSchema))
   async generateOtp(@Args('input') request: GenerateOtpInput) {
-    return this.otpAuthService.sendOTP(request.phone);
+    return this.otpAuthService.sendOTP(request);
   }
   // Its commented as of now. This should be part of Two factor authentication.
   // Implementation is not yet completed.

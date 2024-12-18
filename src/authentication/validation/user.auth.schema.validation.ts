@@ -1,4 +1,8 @@
 import * as Joi from '@hapi/joi';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+const multiTenancyEnabled = Boolean(process.env.MULTI_TENANCY_ENABLED);
 
 export const UserPasswordSignupInputSchema = Joi.object({
   email: Joi.string().email({ tlds: { allow: false } }),
@@ -13,6 +17,13 @@ export const UserPasswordSignupInputSchema = Joi.object({
   lastName: Joi.string()
     .regex(/^[a-zA-Z ]*$/)
     .required(),
+  tenantDomain: Joi.string().when('email', {
+    is: Joi.exist(),
+    then: Joi.optional(),
+    otherwise: multiTenancyEnabled
+      ? Joi.string().required()
+      : Joi.string().optional(),
+  }),
 })
   .options({ abortEarly: false })
   .or('email', 'phone');
@@ -27,16 +38,29 @@ export const UserOTPSignupInputSchema = Joi.object({
   lastName: Joi.string()
     .regex(/^[a-zA-Z ]*$/)
     .required(),
+  tenantDomain: Joi.string().when('email', {
+    is: Joi.exist(),
+    then: Joi.optional(),
+    otherwise: multiTenancyEnabled
+      ? Joi.string().required()
+      : Joi.string().optional(),
+  }),
 }).options({ abortEarly: false });
 
 export const UserPasswordLoginInputSchema = Joi.object({
   username: Joi.string().required(),
   password: Joi.string().min(10).required(),
+  tenantDomain: multiTenancyEnabled
+    ? Joi.string().required()
+    : Joi.string().optional(),
 }).options({ abortEarly: false });
 
 export const UserOTPLoginInputSchema = Joi.object({
   username: Joi.string().required(),
   otp: Joi.string().required(),
+  tenantDomain: multiTenancyEnabled
+    ? Joi.string().required()
+    : Joi.string().optional(),
 }).options({ abortEarly: false });
 
 export const UserSendOTPInputSchema = Joi.object({
@@ -67,6 +91,9 @@ export const GoogleUserSchema = Joi.object({
 
 export const GenerateOtpInputSchema = Joi.object({
   phone: Joi.string().trim().required(),
+  tenantDomain: multiTenancyEnabled
+    ? Joi.string().required()
+    : Joi.string().optional(),
 });
 
 export const Enable2FAInputSchema = Joi.object({

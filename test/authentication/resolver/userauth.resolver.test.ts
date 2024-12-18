@@ -87,6 +87,7 @@ describe('Userauth Module', () => {
         const input: UserPasswordLoginInput = {
           username: 'user@test.com',
           password: 's3cr3t1234567890',
+          tenantDomain: 'domain.com',
         };
         const user = {
           id: users[0].id,
@@ -115,7 +116,7 @@ describe('Userauth Module', () => {
           .post(gql)
           .send({
             query:
-              'mutation { passwordLogin(input: { username: "user@test.com" password: "s3cr3t1234567890" }) { accessToken, refreshToken, user{ id, email, phone, firstName, lastName, status}}}',
+              'mutation { passwordLogin(input: { username: "user@test.com" password: "s3cr3t1234567890" tenantDomain: "domain.com" }) { accessToken, refreshToken, user{ id, email, phone, firstName, lastName, status}}}',
           })
           .expect(200)
           .expect((res) => {

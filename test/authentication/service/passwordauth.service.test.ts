@@ -9,6 +9,7 @@ import User from '../../../src/authorization/entity/user.entity';
 import { UserServiceInterface } from '../../../src/authorization/service/user.service.interface';
 import { Status } from '../../../src/schema/graphql.schema';
 import { TENANT_CONNECTION } from '../../../src/database/database.constants';
+import { TenantServiceInterface } from '../../../src/tenant/service/tenant.service.interface';
 
 let users: User[] = [
   {
@@ -28,6 +29,7 @@ describe('test PasswordAuthService', () => {
   let passwordAuthService: PasswordAuthService;
   let authenticationHelper: AuthenticationHelper;
   const userService = Substitute.for<UserServiceInterface>();
+  const tenantService = Substitute.for<TenantServiceInterface>();
   const configService = Substitute.for<ConfigService>();
   const tokenService = Substitute.for<TokenService>();
   configService.get('ENV').returns('local');
@@ -46,6 +48,7 @@ describe('test PasswordAuthService', () => {
       controllers: [],
       providers: [
         { provide: UserServiceInterface, useValue: userService },
+        { provide: TenantServiceInterface, useValue: tenantService },
         { provide: ConfigService, useValue: configService },
         { provide: TokenService, useValue: tokenService },
         {

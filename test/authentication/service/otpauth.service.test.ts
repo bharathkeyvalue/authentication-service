@@ -17,6 +17,7 @@ import {
   UserOTPLoginInput,
   UserOTPSignupInput,
 } from '../../../src/schema/graphql.schema';
+import { TenantServiceInterface } from '../../../src/tenant/service/tenant.service.interface';
 
 let users: User[] = [
   {
@@ -36,6 +37,7 @@ describe('test OTPAuthService', () => {
   let otpAuthService: OTPAuthService;
   let authenticationHelper: AuthenticationHelper;
   const userService = Substitute.for<UserServiceInterface>();
+  const tenantService = Substitute.for<TenantServiceInterface>();
   const configService = Substitute.for<ConfigService>();
   const otpService = Substitute.for<TwilioOTPService>();
   const tokenService = Substitute.for<TokenService>();
@@ -48,6 +50,7 @@ describe('test OTPAuthService', () => {
       controllers: [],
       providers: [
         { provide: UserServiceInterface, useValue: userService },
+        { provide: TenantServiceInterface, useValue: tenantService },
         { provide: ConfigService, useValue: configService },
         { provide: TokenService, useValue: tokenService },
         { provide: 'OTPVerifiable', useValue: otpService },
@@ -235,7 +238,7 @@ describe('test OTPAuthService', () => {
       .getActiveUserByPhoneNumber('91234567980')
       .returns(Promise.resolve(users[0]));
 
-    const resp = await otpAuthService.sendOTP('91234567980');
+    const resp = await otpAuthService.sendOTP({ phone: '91234567980' });
     expect(resp).toHaveReturned;
   });
 });

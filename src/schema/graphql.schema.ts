@@ -35,6 +35,7 @@ export interface UserPasswordSignupInput {
     firstName: string;
     middleName?: string;
     lastName: string;
+    tenantDomain?: string;
 }
 
 export interface UserOTPSignupInput {
@@ -43,16 +44,19 @@ export interface UserOTPSignupInput {
     firstName: string;
     middleName?: string;
     lastName: string;
+    tenantDomain?: string;
 }
 
 export interface UserPasswordLoginInput {
     username: string;
     password: string;
+    tenantDomain?: string;
 }
 
 export interface UserOTPLoginInput {
     username: string;
     otp: string;
+    tenantDomain?: string;
 }
 
 export interface UserPasswordInput {
@@ -66,6 +70,7 @@ export interface RefreshTokenInput {
 
 export interface GenerateOtpInput {
     phone: string;
+    tenantDomain?: string;
 }
 
 export interface Enable2FAInput {

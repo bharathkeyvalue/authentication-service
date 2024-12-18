@@ -26,11 +26,16 @@ import {
 import { Authenticatable } from '../interfaces/authenticatable';
 import { TokenService } from './token.service';
 import { TENANT_CONNECTION } from '../../database/database.constants';
+import { TenantServiceInterface } from '../../tenant/service/tenant.service.interface';
+import { ExecutionManager } from '../../util/execution.manager';
 
 @Injectable()
 export default class PasswordAuthService implements Authenticatable {
   constructor(
-    @Inject(UserServiceInterface) private userService: UserServiceInterface,
+    @Inject(UserServiceInterface)
+    private userService: UserServiceInterface,
+    @Inject(TenantServiceInterface)
+    private tenantService: TenantServiceInterface,
     private tokenService: TokenService,
     private authenticationHelper: AuthenticationHelper,
     @Inject(TENANT_CONNECTION)
@@ -41,6 +46,7 @@ export default class PasswordAuthService implements Authenticatable {
   async userSignup(
     userDetails: UserPasswordSignupInput,
   ): Promise<UserSignupResponse> {
+    await this.tenantService.setTenantIdInContext(userDetails);
     const verifyObj = await this.userService.verifyDuplicateUser(
       userDetails.email,
       userDetails.phone,
@@ -91,7 +97,7 @@ export default class PasswordAuthService implements Authenticatable {
     const transaction = await this.dataSource.manager.transaction(async () => {
       const savedUser = await this.userService.createUser(userFromInput);
       invitationToken = this.authenticationHelper.generateInvitationToken(
-        { id: savedUser.id },
+        { id: savedUser.id, tenantId: ExecutionManager.getTenantId() },
         this.configService.get('INVITATION_TOKEN_EXPTIME'),
       );
       await this.userService.updateField(
@@ -106,7 +112,6 @@ export default class PasswordAuthService implements Authenticatable {
         lastName: user.lastName,
         inviteToken: user?.inviteToken,
         status: user.status,
-        tenantId: user.tenantId,
       };
       return {
         inviteToken: invitationToken.token,
@@ -123,6 +128,9 @@ export default class PasswordAuthService implements Authenticatable {
     const verificationResponse: any = this.authenticationHelper.validateInvitationToken(
       passwordDetails.inviteToken,
     );
+    await this.tenantService.setTenantIdInContext({
+      tenantId: verificationResponse.tenantId,
+    });
     const user = await this.userService.getUserById(verificationResponse.id);
     if (user.password) {
       throw new PasswordAlreadySetException(user.id);
@@ -138,6 +146,7 @@ export default class PasswordAuthService implements Authenticatable {
   }
 
   async userLogin(userDetails: UserPasswordLoginInput): Promise<TokenResponse> {
+    await this.tenantService.setTenantIdInContext(userDetails);
     const userRecord = await this.userService.getUserDetailsByUsername(
       userDetails.username,
       userDetails.username,

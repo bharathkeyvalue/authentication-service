@@ -5,11 +5,15 @@ import { GoogleUserSchema } from '../validation/user.auth.schema.validation';
 import { UserServiceInterface } from '../../authorization/service/user.service.interface';
 import { AuthenticationHelper } from '../authentication.helper';
 import { GoogleLoginUser } from '../passport/googleStrategy';
+import { TenantServiceInterface } from '../../tenant/service/tenant.service.interface';
 
 @Injectable()
 export class GoogleAuthService {
   constructor(
-    @Inject(UserServiceInterface) private userService: UserServiceInterface,
+    @Inject(UserServiceInterface)
+    private userService: UserServiceInterface,
+    @Inject(TenantServiceInterface)
+    private tenantService: TenantServiceInterface,
     private authenticationHelper: AuthenticationHelper,
   ) {}
   private async validateInput(
@@ -26,28 +30,32 @@ export class GoogleAuthService {
   }
 
   async googleLogin(googleLoginInput: GoogleLoginUser) {
-    return this.validateInput(googleLoginInput)
-      .then((googleUser) => {
-        return this.userService.getUserDetailsByEmailOrPhone(googleUser.email);
-      })
-      .then((existingUserDetails) => {
-        if (!existingUserDetails) {
-          const userFromInput = new User();
-          return this.userService.createUser({
-            ...userFromInput,
-            ...googleLoginInput,
-            origin: 'google',
-          });
-        } else return existingUserDetails;
-      })
-      .then((user) => {
-        const token = this.authenticationHelper.generateTokenForUser(user);
-        this.userService.updateField(
-          user.id,
-          'refreshToken',
-          token.refreshToken,
-        );
-        return token;
-      });
+    try {
+      const googleUser = await this.validateInput(googleLoginInput);
+      await this.tenantService.setTenantIdInContext(googleUser);
+
+      let user = await this.userService.getUserDetailsByEmailOrPhone(
+        googleUser.email,
+      );
+      if (!user) {
+        user = await this.userService.createUser({
+          ...new User(),
+          ...googleLoginInput,
+          origin: 'google',
+        });
+      }
+
+      const token = this.authenticationHelper.generateTokenForUser(user);
+      await this.userService.updateField(
+        user.id,
+        'refreshToken',
+        token.refreshToken,
+      );
+
+      return token;
+    } catch (error) {
+      console.error('Google login failed:', error.message);
+      throw new Error('Google login failed. Please try again.');
+    }
   }
 }

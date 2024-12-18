@@ -1,16 +1,16 @@
 type Mutation {
-    passwordLogin(input: UserPasswordLoginInput!): TokenResponse
-    passwordSignup(input: UserPasswordSignupInput!): UserSignupResponse
-    inviteTokenSignup(input: UserInviteTokenSignupInput): InviteTokenResponse
-    refreshInviteToken(id: ID!):InviteTokenResponse
-    setPasswordForInvite(input: UserPasswordForInviteInput): UserSignupResponse
-    revokeInviteToken(id: ID!): Boolean
-    otpLogin(input: UserOTPLoginInput!): TokenResponse
-    otpSignup(input: UserOTPSignupInput!): UserSignupResponse
-    changePassword(input: UserPasswordInput!): User
-    refresh(input: RefreshTokenInput!): TokenResponse
-    logout: String
-    generateOtp(input: GenerateOtpInput): String
+  passwordLogin(input: UserPasswordLoginInput!): TokenResponse
+  passwordSignup(input: UserPasswordSignupInput!): UserSignupResponse
+  inviteTokenSignup(input: UserInviteTokenSignupInput): InviteTokenResponse
+  refreshInviteToken(id: ID!): InviteTokenResponse
+  setPasswordForInvite(input: UserPasswordForInviteInput): UserSignupResponse
+  revokeInviteToken(id: ID!): Boolean
+  otpLogin(input: UserOTPLoginInput!): TokenResponse
+  otpSignup(input: UserOTPSignupInput!): UserSignupResponse
+  changePassword(input: UserPasswordInput!): User
+  refresh(input: RefreshTokenInput!): TokenResponse
+  logout: String
+  generateOtp(input: GenerateOtpInput): String
 }
 
 input UserPasswordSignupInput {
@@ -20,6 +20,7 @@ input UserPasswordSignupInput {
   firstName: String!
   middleName: String
   lastName: String!
+  tenantDomain: String
 }
 
 input UserOTPSignupInput {
@@ -28,16 +29,19 @@ input UserOTPSignupInput {
   firstName: String!
   middleName: String
   lastName: String!
+  tenantDomain: String
 }
 
 input UserPasswordLoginInput {
   username: String!
   password: String!
+  tenantDomain: String
 }
 
 input UserOTPLoginInput {
   username: String!
   otp: String!
+  tenantDomain: String
 }
 
 type TokenResponse {
@@ -65,11 +69,12 @@ input RefreshTokenInput {
 }
 
 input GenerateOtpInput {
-    phone: String!
+  phone: String!
+  tenantDomain: String
 }
 
-input Enable2FAInput{
-    code: String!
+input Enable2FAInput {
+  code: String!
 }
 
 input UserInviteTokenSignupInput {

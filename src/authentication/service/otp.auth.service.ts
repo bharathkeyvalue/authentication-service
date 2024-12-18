@@ -3,6 +3,7 @@ import User from '../../authorization/entity/user.entity';
 import { UserNotFoundException } from '../../authorization/exception/user.exception';
 import { UserServiceInterface } from '../../authorization/service/user.service.interface';
 import {
+  GenerateOtpInput,
   Status,
   TokenResponse,
   UserOTPLoginInput,
@@ -16,11 +17,15 @@ import {
 import { Authenticatable } from '../interfaces/authenticatable';
 import { OTPVerifiable } from '../interfaces/otp.verifiable';
 import { TokenService } from './token.service';
+import { TenantServiceInterface } from '../../tenant/service/tenant.service.interface';
 
 @Injectable()
 export default class OTPAuthService implements Authenticatable {
   constructor(
-    @Inject(UserServiceInterface) private userService: UserServiceInterface,
+    @Inject(UserServiceInterface)
+    private userService: UserServiceInterface,
+    @Inject(TenantServiceInterface)
+    private tenantService: TenantServiceInterface,
     private tokenService: TokenService,
     private otpService: OTPVerifiable,
   ) {}
@@ -28,6 +33,7 @@ export default class OTPAuthService implements Authenticatable {
   async userSignup(
     userDetails: UserOTPSignupInput,
   ): Promise<UserSignupResponse> {
+    await this.tenantService.setTenantIdInContext(userDetails);
     const verifyObj = await this.userService.verifyDuplicateUser(
       userDetails.email,
       userDetails.phone,
@@ -51,6 +57,7 @@ export default class OTPAuthService implements Authenticatable {
   }
 
   async userLogin(userDetails: UserOTPLoginInput): Promise<TokenResponse> {
+    await this.tenantService.setTenantIdInContext(userDetails);
     const userRecord = await this.userService.getUserDetailsByUsername(
       userDetails.username,
       userDetails.username,
@@ -69,13 +76,16 @@ export default class OTPAuthService implements Authenticatable {
     return tokenResponse;
   }
 
-  async sendOTP(phoneNumber: string): Promise<void> {
-    const user = await this.userService.getActiveUserByPhoneNumber(phoneNumber);
+  async sendOTP(generateOtpInput: GenerateOtpInput): Promise<void> {
+    await this.tenantService.setTenantIdInContext(generateOtpInput);
+    const user = await this.userService.getActiveUserByPhoneNumber(
+      generateOtpInput.phone,
+    );
     if (user && user.phone) {
       //Found an active user, generating OTP and sending the message to the user
       await this.otpService.sendOTP(user);
     } else {
-      throw new UserNotFoundException(phoneNumber);
+      throw new UserNotFoundException(generateOtpInput.phone);
     }
   }
 
